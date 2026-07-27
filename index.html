@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifestem Academy Online — Enroll</title>
+<style>
+  :root{
+    --navy:#0F2147; --royal:#1B3A8A; --gold:#E0A82E; --gold-d:#B7861B;
+    --teal:#0E7C7B; --ice:#CFE0F5; --paper:#F5F8FD; --ink:#1A2233; --gray:#55606E; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--white);line-height:1.55}
+  h1,h2,h3,.serif{font-family:Cambria,Georgia,"Times New Roman",serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:rgba(15,33,71,.97);backdrop-filter:blur(6px);color:#fff}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{font-family:Cambria,Georgia,serif;font-weight:bold;font-size:20px;letter-spacing:.5px}
+  .brand b{color:var(--gold)}
+  .nav a.cta{background:var(--gold);color:var(--navy);font-weight:700;padding:10px 18px;border-radius:8px;text-decoration:none;font-size:14px}
+  .nav .links{display:flex;gap:22px;font-size:14px}
+  .nav .links a{color:#dfe7f5;text-decoration:none}
+  .nav .links a:hover{color:#fff}
+  @media(max-width:760px){.nav .links{display:none}}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#0F2147 0%,#16305F 55%,#1B3A8A 100%);color:#fff;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;border-radius:50%;background:rgba(14,124,123,.35)}
+  .hero .wrap{position:relative;z-index:2;padding:70px 24px 84px}
+  .eyebrow{color:var(--gold);font-weight:700;letter-spacing:3px;font-size:13px;text-transform:uppercase}
+  .hero h1{font-size:52px;line-height:1.08;margin:14px 0 8px;max-width:15ch}
+  .hero .tag{color:var(--gold);font-style:italic;font-size:22px;margin-bottom:14px;font-family:Cambria,Georgia,serif}
+  .hero p.lead{color:var(--ice);font-size:18px;max-width:60ch}
+  .hero .btns{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 26px;border-radius:9px;text-decoration:none;font-weight:700;font-size:15px}
+  .btn-gold{background:var(--gold);color:var(--navy)}
+  .btn-ghost{border:2px solid rgba(255,255,255,.55);color:#fff}
+  .hero .start{margin-top:26px;color:#9fb0d8;font-size:14px;font-weight:600}
+  /* sections */
+  section{padding:60px 0}
+  .kick{color:var(--gold-d);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;margin-bottom:6px}
+  h2{font-size:32px;color:var(--royal);margin-bottom:8px}
+  .sub{color:var(--gray);font-size:16px;max-width:70ch;margin-bottom:30px}
+  .grid{display:grid;gap:18px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
+  .card{background:var(--white);border:1px solid #e6ecf6;border-radius:14px;padding:22px;box-shadow:0 6px 18px rgba(20,40,80,.06)}
+  .card .num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Cambria,serif;font-weight:bold;font-size:20px;margin-bottom:12px}
+  .card h3{font-size:18px;color:var(--navy);margin-bottom:6px}
+  .card p{color:var(--gray);font-size:14px}
+  .alt{background:var(--paper)}
+  /* giants */
+  .giants{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:760px){.giants{grid-template-columns:1fr}}
+  .giant{background:#16305F;color:#fff;border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:center}
+  .giant .dot{min-width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px}
+  .giant b{font-family:Cambria,serif;font-size:14.5px;display:block}
+  .giant span{color:var(--gold);font-size:12px;font-style:italic}
+  /* schedule */
+  .sched{border-radius:14px;overflow:hidden;border:1px solid #e6ecf6}
+  .srow{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid #eef2f8}
+  .srow:last-child{border-bottom:none}
+  .srow .t{background:var(--navy);color:#fff;font-weight:700;padding:16px;text-align:center;font-family:Cambria,serif}
+  .srow:nth-child(2) .t{background:var(--royal)} .srow:nth-child(3) .t{background:var(--teal)}
+  .srow:nth-child(4) .t{background:var(--gold-d)} .srow:nth-child(5) .t{background:var(--navy)}
+  .srow .d{padding:16px 20px} .srow .d b{color:var(--navy)} .srow .d span{color:var(--gray);font-size:14px}
+  /* tuition */
+  .tuit{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.tuit{grid-template-columns:1fr}}
+  .plan{border-radius:16px;padding:28px;color:#fff}
+  .plan.full{background:linear-gradient(160deg,#1B3A8A,#0F2147)}
+  .plan.sat{background:linear-gradient(160deg,#0E7C7B,#0b5f5e)}
+  .plan .price{font-family:Cambria,serif;font-size:44px;font-weight:bold;margin:6px 0}
+  .plan .price small{font-size:16px;color:var(--ice);font-weight:normal}
+  .plan h3{font-size:22px;color:var(--gold)}
+  .plan ul{list-style:none;margin-top:14px} .plan li{padding:5px 0 5px 24px;position:relative;font-size:14.5px;color:#eaf0fb}
+  .plan li:before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:bold}
+  .aidbox{margin-top:22px;background:var(--paper);border:1px solid #e6ecf6;border-left:5px solid var(--gold);border-radius:10px;padding:20px}
+  .aidbox b{color:var(--navy)}
+  /* dates */
+  .dates{background:var(--navy);color:#fff;border-radius:16px;padding:34px;display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center}
+  @media(max-width:760px){.dates{grid-template-columns:1fr;text-align:center}}
+  .bigdate{text-align:center}
+  .bigdate .m{color:var(--gold);font-weight:700;letter-spacing:3px}
+  .bigdate .d{font-family:Cambria,serif;font-size:82px;font-weight:bold;line-height:1}
+  .bigdate .l{color:var(--ice);font-size:14px}
+  .steps{display:flex;flex-direction:column;gap:10px}
+  .step{display:flex;gap:14px;align-items:center;background:#16305F;border-radius:10px;padding:12px 16px}
+  .step .n{min-width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:bold}
+  .step span{font-size:14.5px}
+  /* cta band */
+  .band{background:linear-gradient(120deg,#B7861B,#E0A82E);color:var(--navy);text-align:center;border-radius:16px;padding:40px 24px}
+  .band h2{color:var(--navy);font-size:30px}
+  .band .btn-gold{background:var(--navy);color:#fff;margin-top:16px}
+  footer{background:var(--navy);color:#9fb0d8;padding:30px 0;font-size:13px;text-align:center}
+  footer b{color:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">LIFESTEM <b>ACADEMY</b></div>
+    <div class="links">
+      <a href="#different">Why us</a><a href="#day">The day</a><a href="#tuition">Tuition</a><a href="#enroll">Enroll</a>
+    </div>
+    <a href="#enroll" class="cta">Enroll now</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Lifestem Academy Online</div>
+    <h1>The world's most advanced STEM school.</h1>
+    <div class="tag">Where classical education meets STEM excellence.</div>
+    <p class="lead">Raising the next generation of scientists, mathematicians, and thinkers — grounded in the history and philosophy of science, logic, and theology. Live, online, and built for genuine mastery.</p>
+    <div class="btns">
+      <a href="#enroll" class="btn btn-gold">Enroll for September</a>
+      <a href="#tuition" class="btn btn-ghost">See tuition &amp; aid</a>
+    </div>
+    <div class="start">Classes begin Monday, September 14, 2026 · 10:00 a.m.–3:00 p.m. Eastern · Grades 6–12</div>
+  </div>
+</div>
+
+<!-- different -->
+<section id="different"><div class="wrap">
+  <div class="kick">What makes us different</div>
+  <h2>Not just STEM — mastery, and the human story behind it</h2>
+  <p class="sub">Most schools teach students to meet a topic. We teach them to master it, explain it, and understand where it came from.</p>
+  <div class="grid g4">
+    <div class="card"><div class="num" style="background:var(--royal)">1</div><h3>Advanced STEM</h3><p>A mastery math sequence from PreAlgebra to Calculus, plus rigorous, hands-on science.</p></div>
+    <div class="card"><div class="num" style="background:var(--teal)">2</div><h3>A thinking core</h3><p>Logic, the history and philosophy of science, and theology — woven through every day.</p></div>
+    <div class="card"><div class="num" style="background:var(--gold-d)">3</div><h3>Mastery, not exposure</h3><p>Students progress at the pace of mastery and prove it by explaining their reasoning.</p></div>
+    <div class="card"><div class="num" style="background:var(--navy)">4</div><h3>A real parent partnership</h3><p>We equip you to reinforce the learning at home through Saturday Parent University.</p></div>
+  </div>
+</div></section>
+
+<!-- giants -->
+<section class="alt"><div class="wrap">
+  <div class="kick">The giants who inspire us</div>
+  <h2>We stand on the shoulders of giants</h2>
+  <p class="sub">Men and women who pursued truth, overcame adversity, and used their gifts to serve. Their lives are part of our curriculum.</p>
+  <div class="giants">
+    <div class="giant"><div class="dot" style="background:var(--royal)">1</div><div><b>Booker T. Washington</b><span>dignity &amp; education</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--teal)">2</div><div><b>Frederick Douglass</b><span>literacy &amp; courage</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--gold-d)">3</div><div><b>George Washington Carver</b><span>science in service</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--royal)">4</div><div><b>Dr. Benjamin Carson</b><span>excellence from adversity</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--teal)">5</div><div><b>William Wilberforce</b><span>perseverance for justice</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--gold-d)">6</div><div><b>Leonhard Euler</b><span>beauty of mathematics</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--royal)">7</div><div><b>Sir Isaac Newton</b><span>laws of nature &amp; wonder</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--teal)">8</div><div><b>James Clerk Maxwell</b><span>unity &amp; humility</span></div></div>
+    <div class="giant"><div class="dot" style="background:var(--gold-d)">9</div><div><b>Michael Faraday</b><span>curiosity &amp; service</span></div></div>
+  </div>
+</div></section>
+
+<!-- day -->
+<section id="day"><div class="wrap">
+  <div class="kick">The school day</div>
+  <h2>10:00 a.m. – 3:00 p.m. Eastern</h2>
+  <p class="sub">Math and science every day, with an integrated afternoon that ties them together and adds logic, history, and the philosophy of science.</p>
+  <div class="sched">
+    <div class="srow"><div class="t">10:00 – 11:30</div><div class="d"><b>Math Review.</b> <span>Core math on the Counting to Calculus sequence — warm-up, worked examples, then small-group practice.</span></div></div>
+    <div class="srow"><div class="t">11:30 – 1:00</div><div class="d"><b>Science.</b> <span>The day's concept with a demonstration or lab, tied to the scientists who discovered it.</span></div></div>
+    <div class="srow"><div class="t">1:00 – 1:30</div><div class="d"><b>Lunch &amp; movement.</b> <span>A real break — food, rest, and a chance to move.</span></div></div>
+    <div class="srow"><div class="t">1:30 – 3:00</div><div class="d"><b>Applied STEM &amp; Great Thinkers.</b> <span>Math + science together: labs, projects, plus logic, philosophy of science, and a great-thinker study.</span></div></div>
+  </div>
+</div></section>
+
+<!-- tuition -->
+<section id="tuition" class="alt"><div class="wrap">
+  <div class="kick">Choose your cohort</div>
+  <h2>Two ways to join — tuition &amp; aid</h2>
+  <p class="sub">Premium, live, small-group instruction — priced accessibly. Most families will not pay full price: need-based flexible tuition and scholarships are available, and no family is turned away for cost alone.</p>
+  <div class="tuit">
+    <div class="plan full">
+      <h3>Full Academy · Mon–Thu</h3>
+      <div class="price">$12,900<small>/year &nbsp;·&nbsp; or $1,290/mo ×10</small></div>
+      <ul>
+        <li>Live 10–3 ET, four days a week</li>
+        <li>All math, science &amp; applied STEM</li>
+        <li>Curriculum, worksheets &amp; mastery tracking</li>
+        <li>The fastest, steadiest progress</li>
+      </ul>
+    </div>
+    <div class="plan sat">
+      <h3>Saturday Cohort</h3>
+      <div class="price">$3,900<small>/year &nbsp;·&nbsp; or $390/mo ×10</small></div>
+      <ul>
+        <li>One full 10–3 ET STEM day, Saturdays</li>
+        <li>Includes Parent University for parents</li>
+        <li>Great alongside other schooling</li>
+        <li>Same curriculum, one focused day</li>
+      </ul>
+    </div>
+  </div>
+  <div class="aidbox">
+    <b>Financial aid &amp; scholarships.</b> Need-based flexible tuition brings the Full Academy as low as <b>$3,900/year</b> and the Saturday Cohort to <b>$1,500/year</b> for families with the highest need. Merit and access scholarships — the Founder's Scholarship (50%), STEM Excellence Scholarship (25%), and Legacy of Learning grant (15%) — are available in limited numbers. Sibling (10%), pay-in-full (5%), and early-bird (5%) discounts also apply. <br><br>
+    <span style="color:var(--gray);font-size:13px">Tuition is benchmarked to leading live, small-class online schools (2026): mid-range online private runs $10–11k/year and premium live programs $12–20k+/year — Lifestem is positioned at the accessible end of the premium tier.</span>
+  </div>
+</div></section>
+
+<!-- parent university -->
+<section><div class="wrap">
+  <div class="kick">For parents</div>
+  <h2>Parent University</h2>
+  <p class="sub">A child's education is strongest when home and school pull together. On Saturdays, while students learn, we equip you.</p>
+  <div class="grid g4">
+    <div class="card"><div class="num" style="background:var(--gold-d)">A</div><h3>The people behind the science</h3><p>Studies of the men and women who inspire us — and the character their lives teach.</p></div>
+    <div class="card"><div class="num" style="background:var(--royal)">B</div><h3>Support learning at home</h3><p>How deliberate practice works, how to use the mastery tracker, and how to encourage without rescuing.</p></div>
+    <div class="card"><div class="num" style="background:var(--teal)">C</div><h3>Faith, logic &amp; philosophy of science</h3><p>How science, reason, and the deepest questions fit together — so you can guide the conversation.</p></div>
+    <div class="card"><div class="num" style="background:var(--navy)">D</div><h3>A community of families</h3><p>Encouragement, connection, and a shared vision for raising thinkers.</p></div>
+  </div>
+</div></section>
+
+<!-- dates + steps -->
+<section class="alt"><div class="wrap">
+  <div class="kick">The road to opening day</div>
+  <h2 style="margin-bottom:26px">Enroll before we begin</h2>
+  <div class="dates">
+    <div class="bigdate"><div class="m">SEPTEMBER</div><div class="d">14</div><div class="l">First day of class · Monday · 10 a.m. ET</div></div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><span><b>Choose a cohort</b> — Monday–Thursday or Saturday.</span></div>
+      <div class="step"><div class="n">2</div><span><b>Register</b> your student and complete the forms.</span></div>
+      <div class="step"><div class="n">3</div><span><b>Take the placement diagnostic</b> — we start your child at the right level.</span></div>
+      <div class="step"><div class="n">4</div><span><b>Get set up</b> — folder, tracker &amp; a tech check before day one.</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section id="enroll"><div class="wrap">
+  <div class="band">
+    <div class="kick" style="color:var(--navy)">Join us</div>
+    <h2>Raise a scientist. A mathematician. A thinker.</h2>
+    <p style="max-width:60ch;margin:8px auto 0;font-size:16px">Enrollment is open for the September cohort. Reach out to reserve your child's place, ask about financial aid, or book a parent orientation.</p>
+    <a href="mailto:hello@lifestem.academy?subject=Enrollment%20Inquiry" class="btn btn-gold">Start enrollment</a>
+    <div style="margin-top:12px;font-size:14px">or email <b>hello@lifestem.academy</b> · countingtocalculus.org</div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <b>Lifestem Academy Online</b> — Introducing the world's most advanced STEM school.<br>
+    Where classical education meets STEM excellence · Financial aid &amp; scholarships available · No family turned away for cost alone.
+  </div>
+</footer>
+
+</body>
+</html>
