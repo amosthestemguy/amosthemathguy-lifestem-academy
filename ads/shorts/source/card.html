@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&display=block" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:540px;height:960px;overflow:hidden;font-family:Inter,sans-serif;color:#fff}
+body{background:radial-gradient(120% 80% at 50% 0%,#2a5ff0 0%,#1f4fd6 45%,#163fb4 75%,#0b2470 100%)}
+.k{position:absolute;top:112px;left:0;right:0;text-align:center;color:#f5b70a;font-weight:700;letter-spacing:.32em;font-size:13px}
+.k i{display:block;width:44px;height:2px;background:#f5b70a;margin:10px auto 0}
+.feat{position:absolute;top:150px;left:0;right:0;text-align:center}
+.feat span{display:inline-block;background:#f5b70a;color:#0b2470;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:999px}
+h1{position:absolute;top:186px;left:26px;right:26px;text-align:center;font-family:'Playfair Display',serif;font-weight:900;font-size:33px;line-height:1.1}
+h1 em{font-style:normal;color:#f5b70a}
+.frame{position:absolute;left:18px;right:18px;top:300px;height:284px;border:3px solid #f5b70a;border-radius:14px;background:#000}
+.by{position:absolute;top:690px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:600;opacity:.95}
+.by img{width:44px;height:44px;border-radius:50%}
+/* end card */
+.end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 30px 120px}
+.end img{width:120px;height:120px;border-radius:50%}
+.end h2{font-family:'Playfair Display',serif;font-weight:900;font-size:34px;line-height:1.1;margin-top:18px}
+.end h2 em{font-style:normal;color:#f5b70a}
+.end .t{margin-top:16px;font-size:17px;font-weight:600;line-height:1.6}
+.end .t b{color:#f5b70a}
+.end .cta{margin-top:20px;background:#f5b70a;color:#0b2470;font-weight:800;font-size:19px;border-radius:999px;padding:14px 24px;box-shadow:0 6px 0 #b98700}
+.end .u{margin-top:16px;font-weight:800;font-size:18px}
+.end .p{margin-top:18px;font-size:14px;opacity:.85}
+</style></head><body>
+<script>
+const P=new URLSearchParams(location.search);
+if(P.get('mode')==='end'){
+ document.body.innerHTML=`<div class="k">COUNTING TO CALCULUS<i></i></div><div class="end">
+ <img src="../../source/amos.png"><h2>Learn live with <em>AmosTheMathGuy's</em> curriculum</h2>
+ <div class="t">Live math & English classes, online<br>Mon–Thu <b>5, 6, 7 or 8 PM ET</b> · Sat <b>12, 1, 2 or 3 PM ET</b></div>
+ <div class="cta">Book a free placement assessment →</div>
+ <div class="u">tinyurl.com/CountingToCalculus</div>
+ <div class="p">Live Class $300/mo · Small Group $750/mo</div></div>`;
+}else{
+ document.body.innerHTML=`<div class="k">COUNTING TO CALCULUS<i></i></div>
+ <div class="feat"><span>How I teach · ${P.get('feat')}</span></div>
+ <h1>${P.get('title')}</h1><div class="frame"></div>
+ <div class="by"><img src="../../source/amos.png">Amos Tarfa · AmosTheMathGuy</div>`;
+}
+window.READY=document.fonts.ready.then(()=>Promise.all([...document.images].map(i=>i.complete?1:new Promise(r=>i.onload=r))));
+</script></body></html>
