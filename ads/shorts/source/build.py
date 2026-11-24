@@ -25,6 +25,7 @@ SHORTS = [
 ]
 if len(sys.argv) > 3:
     SHORTS = json.load(open(sys.argv[3]))
+VARIANT = sys.argv[4] if len(sys.argv) > 4 else 'social'   # 'social' (9:16, class times + prices) or 'linkedin' (4:5, PD close)
 FIXES = {'Leonid': 'Leonhard', 'Benuli': 'Bernoulli', "Benuli's": "Bernoulli's", 'Benulis,': 'Bernoullis,', 'Benulis': 'Bernoullis', 'Joanne': 'Johann', 'Benuli,': 'Bernoulli,'}
 def run(cmd): subprocess.run(cmd, check=True)
 
@@ -88,7 +89,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 jobs = []
 for sh in SHORTS:
     jobs.append(dict(q=dict(feat=sh['feat'], title=sh['title']), out=os.path.join(TMP, sh['id'] + '_bg.png')))
-jobs.append(dict(q=dict(mode='end'), out=os.path.join(TMP, 'end.png')))
+jobs.append(dict(q=dict(mode='end_li' if VARIANT == 'linkedin' else 'end'), out=os.path.join(TMP, 'end.png')))
 run(['node', os.path.join(HERE, 'cards.js'), json.dumps(jobs)])
 
 for sh in SHORTS:
@@ -107,11 +108,11 @@ for sh in SHORTS:
     ass, dur = captions(sh)
     assf = os.path.join(TMP, sid + '.ass'); open(assf, 'w').write(ass)
     END = 3.5; total = dur + END
-    out = os.path.join(OUT, f'CTC_short_{sid}.mp4')
+    out = os.path.join(OUT, f'CTC_short_{sid}' + ('_LinkedIn_4x5' if VARIANT == 'linkedin' else '') + '.mp4')
     fc = (
       f"[0:v][2:v]overlay=42:606:shortest=1[v1];[v1]ass={assf}[vb];"
       f"[3:v]trim=duration={END},setpts=PTS-STARTPTS,format=yuv420p,fade=t=in:st=0:d=0.4[ve];"
-      f"[vb]format=yuv420p,fade=t=out:st={dur-0.3}:d=0.3[vbf];[vbf][ve]concat=n=2:v=1:a=0[v];"
+      f"[vb]format=yuv420p,fade=t=out:st={dur-0.3}:d=0.3[vbf];[vbf][ve]concat=n=2:v=1:a=0" + (",crop=1080:1350:0:190" if VARIANT == 'linkedin' else '') + f"[v];"
       f"[2:a]loudnorm=I=-15:TP=-1.5,apad=pad_dur={END}[voice];"
       f"[4:a]volume=0.10,afade=t=out:st={total-1.5}:d=1.5[mus];"
       f"[voice][mus]amix=inputs=2:duration=first:normalize=0,atrim=0:{total}[a]")

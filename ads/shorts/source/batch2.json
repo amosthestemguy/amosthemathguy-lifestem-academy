@@ -1,17 +1,1 @@
-[
- {"id": "06_math_is_one_story", "feat": "Math as one story",
-  "title": "Math isn’t a pile of worksheets. <em>It’s one story.</em>",
-  "segs": [["phone1123_160755", 0.4, 30.8]]},
- {"id": "07_where_the_wheel_came_from", "feat": "The story behind the math",
-  "title": "Where did the <em>wheel</em> come from?",
-  "segs": [["phone1031_184333", 0.5, 28.3]]},
- {"id": "08_euler_and_franklin", "feat": "The people behind the math",
-  "title": "Euler and <em>Ben Franklin</em> lived at the same time",
-  "segs": [["zoom1101_003131", 7.7, 49.7]]},
- {"id": "09_people_behind_ideas", "feat": "The people behind the math",
-  "title": "Who were the <em>people</em> behind the math we teach?",
-  "segs": [["zoom1101_001623", 10.6, 44.2]]},
- {"id": "10_sixty_seconds", "feat": "The story behind the math",
-  "title": "Who decided a minute has <em>60 seconds?</em>",
-  "segs": [["zoom1101_010825", 12.5, 61.0]]}
-]
+[{"id": "06_math_is_one_story", "feat": "Math as one story", "title": "Math isn\u2019t a pile of worksheets. <em>It\u2019s one story.</em>", "segs": [["phone1123_160755", 0.4, 30.8]]}, {"id": "07_where_the_wheel_came_from", "feat": "The story behind the math", "title": "Where did the <em>wheel</em> come from?", "segs": [["phone1031_184333", 0.5, 28.3]]}, {"id": "08_euler_and_franklin", "feat": "The people behind the math", "title": "Euler and <em>Ben Franklin</em> lived at the same time", "segs": [["zoom1101_003131", 7.7, 49.7]]}, {"id": "09_people_behind_ideas", "feat": "The people behind the math", "title": "Who were the <em>people</em> behind the math we teach?", "segs": [["zoom1101_001623", 10.6, 44.2]]}, {"id": "10_sixty_seconds", "feat": "The story behind the math", "title": "Who decided a minute has <em>60 seconds?</em>", "segs": [["zoom1101_010825", 12.5, 61.0]]}]
