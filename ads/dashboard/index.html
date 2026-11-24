@@ -59,8 +59,9 @@
       <div class="r1-track"><span class="r1-fill" data-draw="goalbar" data-source="funnel" data-field="enrolled" data-row="0"></span></div>
       <div class="r1-stages">
         <span>Leads <b data-draw="s_leads" data-source="funnel" data-field="leads" data-row="0">—</b></span>
-        <span>Contacted <b data-draw="s_contacted" data-source="funnel" data-field="contacted" data-row="0">—</b></span>
-        <span>Assessment booked <b data-draw="s_booked" data-source="funnel" data-field="booked" data-row="0">—</b></span>
+        <span>Readiness check done <b data-draw="s_checked" data-source="funnel" data-field="checked" data-row="0">—</b></span>
+        <span>Trial booked <b data-draw="s_booked" data-source="funnel" data-field="booked" data-row="0">—</b></span>
+        <span>Trial attended <b data-draw="s_attended" data-source="funnel" data-field="attended" data-row="0">—</b></span>
       </div>
     </div>
     <div class="r1-tile" id="views-tile">
@@ -77,6 +78,17 @@
       <div class="r1-lbl">Posts out / scheduled</div>
       <div class="r1-big"><span data-draw="published" data-source="post_totals" data-field="published" data-row="0">—</span><span class="r1-of"> / </span><span data-draw="scheduled" data-source="post_totals" data-field="scheduled" data-row="0">—</span></div>
       <p class="r1-note">Across both Facebook Pages, Instagram and YouTube</p>
+    </div>
+  </section>
+
+  <section id="paid">
+    <h2>Paid ads</h2>
+    <p class="r1-cap" data-draw="paidnote">—</p>
+    <div class="r1-tiles">
+      <div class="r1-tile" id="spend-tile"><div class="r1-lbl">Ad spend to date</div><div class="r1-big" data-draw="spend" data-source="unit_costs" data-field="spend" data-row="0">—</div><p class="r1-note">Meta campaign, all ads</p></div>
+      <div class="r1-tile" id="cpl-tile"><div class="r1-lbl">Cost per lead</div><div class="r1-big" data-draw="cpl" data-source="unit_costs" data-field="per_lead" data-row="0">—</div><p class="r1-note">Education benchmark about $28</p></div>
+      <div class="r1-tile" id="cpt-tile"><div class="r1-lbl">Cost per trial attended</div><div class="r1-big" data-draw="cpt" data-source="unit_costs" data-field="per_trial" data-row="0">—</div><p class="r1-note">The number to watch weekly</p></div>
+      <div class="r1-tile" id="cps-tile"><div class="r1-lbl">Cost per enrolled student</div><div class="r1-big" data-draw="cps" data-source="unit_costs" data-field="per_student" data-row="0">—</div><p class="r1-note">Keep under $400 to scale spend</p></div>
     </div>
   </section>
 
@@ -134,7 +146,8 @@
 <script>
 window.R1 = {
   GOAL: 100,
-  STAGES: ['New', 'Contacted', 'Assessment booked', 'Enrolled', 'Not now'],
+  STAGES: ['New lead', 'Readiness check done', 'Trial booked', 'Trial attended', 'Enrolled', 'Not now'],
+  money: (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : '$' + d3.format(',.0f')(v)),
   num: (v) => (v === null || v === undefined || v === '' ? null : Number(v)),
   fmt: (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : d3.format(',')(v)),
   when: (iso) => new Date(iso).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
@@ -171,9 +184,21 @@ dash.calc('funnel', {
   title: 'Lead funnel',
   description: 'Leads you logged, and how many have reached each stage or beyond.',
   fn: (leads) => {
-    const order = ['New', 'Contacted', 'Assessment booked', 'Enrolled'];
+    const order = ['New lead', 'Readiness check done', 'Trial booked', 'Trial attended', 'Enrolled'];
     const atLeast = (s) => leads.filter((l) => order.indexOf(l.stage) >= order.indexOf(s)).length;
-    return [{ leads: leads.length, contacted: atLeast('Contacted'), booked: atLeast('Assessment booked'), enrolled: atLeast('Enrolled') }];
+    return [{ leads: leads.length, checked: atLeast('Readiness check done'), booked: atLeast('Trial booked'), attended: atLeast('Trial attended'), enrolled: atLeast('Enrolled') }];
+  },
+});
+
+dash.calc('unit_costs', {
+  inputs: ['ads', 'funnel'],
+  title: 'Cost per lead, trial and student',
+  description: 'Total Meta ad spend divided by the leads, trials attended and students enrolled logged on this dashboard. Empty until there is spend and at least one of each.',
+  fn: (ads, funnel) => {
+    const spend = d3.sum(ads, (a) => Number(a.spend) || 0);
+    const f = funnel && funnel[0] ? funnel[0] : { leads: 0, attended: 0, enrolled: 0 };
+    const per = (n) => (spend > 0 && n > 0 ? spend / n : null);
+    return [{ spend, per_lead: per(f.leads), per_trial: per(f.attended), per_student: per(f.enrolled) }];
   },
 });
 
@@ -181,13 +206,24 @@ const one = (src, field) => {
   const d = dash.data(src);
   return d.status === 'ok' && d.data && d.data[0] ? d.data[0][field] : null;
 };
-['enrolled', 's_leads', 's_contacted', 's_booked'].forEach((name) => {
-  const field = { enrolled: 'enrolled', s_leads: 'leads', s_contacted: 'contacted', s_booked: 'booked' }[name];
+['enrolled', 's_leads', 's_checked', 's_booked', 's_attended'].forEach((name) => {
+  const field = { enrolled: 'enrolled', s_leads: 'leads', s_checked: 'checked', s_booked: 'booked', s_attended: 'attended' }[name];
   dash.draw(name, (el) => { el.textContent = R1.fmt(one('funnel', field)); });
 });
 ['views', 'engagement', 'published', 'scheduled'].forEach((name) => {
   dash.draw(name, (el) => { el.textContent = R1.fmt(one('post_totals', name)); });
 });
+[['spend', 'spend'], ['cpl', 'per_lead'], ['cpt', 'per_trial'], ['cps', 'per_student']].forEach(([name, field]) => {
+  dash.draw(name, (el) => { el.textContent = R1.money(one('unit_costs', field)); });
+});
+dash.draw('paidnote', (el) => {
+  const a = dash.data('ads');
+  if (a.status !== 'ok') { el.textContent = '—'; return; }
+  el.textContent = a.data.length === 0
+    ? 'The ads are built and paused. Numbers appear here the morning after they go live.'
+    : 'Meta ad results collected each morning. Costs divide total spend by the leads, trials and students logged below.';
+});
+
 dash.draw('goalbar', (el) => {
   const v = one('funnel', 'enrolled') || 0;
   el.style.width = Math.min(100, (v / R1.GOAL) * 100) + '%';
@@ -283,7 +319,7 @@ dash.draw('leadstable', (tb) => {
     const stTd = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'dash-select';
     sel.setAttribute('aria-label', 'Stage for ' + (r.who || 'this lead'));
     R1.STAGES.forEach((s) => sel.append(new Option(s)));
-    sel.value = R1.STAGES.includes(r.stage) ? r.stage : 'New';
+    sel.value = R1.STAGES.includes(r.stage) ? r.stage : 'New lead';
     sel.onchange = () => { const { id, ...rest } = r; R1.saveLead(r.id, { ...rest, stage: sel.value }); };
     stTd.append(sel);
     tr.append(cell(r.date ? d3.utcFormat('%b %-d')(new Date(r.date)) : ''), cell(r.who), cell(r.source), cell(r.program), stTd, cell(r.note, 'r1-wrap'));
@@ -303,7 +339,7 @@ document.querySelectorAll('#leadform').forEach((form) => {
     const f = new FormData(form);
     const who = String(f.get('who') || '').trim();
     if (!who) return;
-    const ok = await R1.saveLead(null, { date: new Date().toISOString(), who, source: f.get('source'), program: f.get('program'), stage: 'New', note: String(f.get('note') || '').trim() });
+    const ok = await R1.saveLead(null, { date: new Date().toISOString(), who, source: f.get('source'), program: f.get('program'), stage: 'New lead', note: String(f.get('note') || '').trim() });
     if (ok) form.querySelectorAll('#lead-name, #lead-notes').forEach((i) => { i.value = ''; });
   });
 });
