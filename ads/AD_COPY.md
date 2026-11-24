@@ -1,6 +1,8 @@
 # Counting to Calculus: Facebook & Instagram Video Ads
 
-There are 4 ads. Each is 15 seconds long and comes in two sizes, with an original music bed. Every word is on screen, so the ads work with the sound off.
+There are 4 ads. Each is 18.5 seconds long and comes in two sizes, with an original music bed. Every word is on screen, so the ads work with the sound off.
+
+Every ad includes a **live-class scene** that looks like a Zoom gallery view. Amos is at the centre, presenting on a whiteboard where a² + b² = c² is written out by hand, with the history note "known in Babylon, 1800 BC". Student video tiles surround the board and one student raises a hand. The students are clearly drawn as illustrations, and a small caption says so, so no real child's face or name is used. Every ad also closes with Amos's photo and "Classes designed by Amos Tarfa." The Small Group ad opens on the classroom.
 
 | File | Size | Use it for |
 |---|---|---|
@@ -57,6 +59,11 @@ In Ads Manager, upload both sizes to the same ad. Use "Customize media by placem
 **Button:** Learn More
 
 ---
+
+## Upgrade: use real classroom footage
+A real 5–10 second clip of Amos teaching will outperform any animation. A phone video of you at a whiteboard, or a Zoom recording, both work. To use one:
+1. Record yourself at a whiteboard or screen-share. If students appear, use only students whose parents gave written permission for their child to appear in ads. Otherwise use camera-off tiles or blur the faces.
+2. Put the clip in `source/` and swap the whiteboard in the `CLASSROOM` block of `source/ad.html` for a `<video>` tile, then re-render.
 
 ## A simple plan for launching
 1. **Campaign objective:** Leads (or Traffic to the tinyurl form). Budget: start with $10–20 a day.
