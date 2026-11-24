@@ -33,6 +33,13 @@ if(P.get('mode')==='end'){
  <div class="cta">Book a free placement assessment →</div>
  <div class="u">tinyurl.com/CountingToCalculus</div>
  <div class="p">Live Class $300/mo · Small Group $750/mo</div></div>`;
+}else if(P.get('mode')==='end_faith'){
+ document.body.innerHTML=`<div class="k">LIVINGSENSIBLY<i></i></div><div class="end">
+ <img src="../../source/amos.png"><h2>Living<em>Sensibly</em></h2>
+ <div class="t">with Amos Tarfa</div>
+ <div class="t" style="margin-top:6px;opacity:.9">Faith, character and a life well lived.<br>Only one life, so let's live it well.</div>
+ <div class="cta">Follow LivingSensibly →</div>
+ <div class="p">Amos Tarfa · AmosTheMathGuy</div></div>`;
 }else if(P.get('mode')==='end_li'){
  document.body.innerHTML=`<div class="k">COUNTING TO CALCULUS<i></i></div><div class="end">
  <img src="../../source/amos.png"><h2>Counting to <em>Calculus</em></h2>
@@ -42,8 +49,8 @@ if(P.get('mode')==='end'){
  <div class="u">support@countingtocalculus.org</div>
  <div class="p">Amos Tarfa · AmosTheMathGuy · Founder & Chief Curriculum Architect</div></div>`;
 }else{
- document.body.innerHTML=`<div class="k">COUNTING TO CALCULUS<i></i></div>
- <div class="feat"><span>How I teach · ${P.get('feat')}</span></div>
+ document.body.innerHTML=`<div class="k">${P.get('brand')||'COUNTING TO CALCULUS'}<i></i></div>
+ <div class="feat"><span>${P.get('pre')||'How I teach'} · ${P.get('feat')}</span></div>
  <h1>${P.get('title')}</h1><div class="frame"></div>
  <div class="by"><img src="../../source/amos.png">Amos Tarfa · AmosTheMathGuy</div>`;
 }

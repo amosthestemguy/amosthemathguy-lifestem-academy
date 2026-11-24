@@ -52,6 +52,11 @@ def captions(sh):
         t = t.replace("elements", "Elements") if fixed and fixed[-1][2] == "Euclid's" else t
         fixed.append((w[0], w[1], t))
     words = fixed
+    PAIRS = {('city', 'stud,'): ('C.T.', 'Studd:'), ('Club', 'Maxwell.'): ('Clerk', 'Maxwell.'), ('Club', 'Maxwell'): ('Clerk', 'Maxwell')}
+    for k in range(len(words) - 1):
+        rep = PAIRS.get((words[k][2], words[k + 1][2]))
+        if rep:
+            words[k] = (words[k][0], words[k][1], rep[0]); words[k + 1] = (words[k + 1][0], words[k + 1][1], rep[1])
     # chunk into ~3-5 words, break on punctuation / pauses
     chunks, cur = [], []
     for i, w in enumerate(words):
@@ -88,8 +93,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 jobs = []
 for sh in SHORTS:
-    jobs.append(dict(q=dict(feat=sh['feat'], title=sh['title']), out=os.path.join(TMP, sh['id'] + '_bg.png')))
-jobs.append(dict(q=dict(mode='end_li' if VARIANT == 'linkedin' else 'end'), out=os.path.join(TMP, 'end.png')))
+    q = dict(feat=sh['feat'], title=sh['title'])
+    if VARIANT == 'faith':
+        q.update(brand='LIVINGSENSIBLY', pre='LivingSensibly')
+    jobs.append(dict(q=q, out=os.path.join(TMP, sh['id'] + '_bg.png')))
+jobs.append(dict(q=dict(mode={'linkedin': 'end_li', 'faith': 'end_faith'}.get(VARIANT, 'end')), out=os.path.join(TMP, 'end.png')))
 run(['node', os.path.join(HERE, 'cards.js'), json.dumps(jobs)])
 
 for sh in SHORTS:
@@ -108,7 +116,7 @@ for sh in SHORTS:
     ass, dur = captions(sh)
     assf = os.path.join(TMP, sid + '.ass'); open(assf, 'w').write(ass)
     END = 3.5; total = dur + END
-    out = os.path.join(OUT, f'CTC_short_{sid}' + ('_LinkedIn_4x5' if VARIANT == 'linkedin' else '') + '.mp4')
+    out = os.path.join(OUT, f'CTC_short_{sid}' + {'linkedin': '_LinkedIn_4x5', 'faith': '_LivingSensibly'}.get(VARIANT, '') + '.mp4')
     fc = (
       f"[0:v][2:v]overlay=42:606:shortest=1[v1];[v1]ass={assf}[vb];"
       f"[3:v]trim=duration={END},setpts=PTS-STARTPTS,format=yuv420p,fade=t=in:st=0:d=0.4[ve];"
@@ -123,6 +131,6 @@ for sh in SHORTS:
          '-loop', '1', '-framerate', '30', '-t', str(END), '-i', os.path.join(TMP, 'end.png'),
          '-stream_loop', '-1', '-i', MUSIC,
          '-filter_complex', fc, '-map', '[v]', '-map', '[a]',
-         '-c:v', 'libx264', '-crf', '19', '-preset', 'medium', '-pix_fmt', 'yuv420p', '-r', '30',
+         '-c:v', 'libx264', '-crf', '24', '-preset', 'medium', '-pix_fmt', 'yuv420p', '-r', '30',
          '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-t', str(total), out])
     print('built', out, round(total, 1), 's')
