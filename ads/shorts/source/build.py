@@ -23,6 +23,9 @@ SHORTS = [
       title='How much paint does a <em>soccer field</em> need?',
       segs=[('z0721_004954', 23.6, 48.6), ('z0721_004954', 82.5, 87.6)]),
 ]
+if len(sys.argv) > 3:
+    SHORTS = json.load(open(sys.argv[3]))
+FIXES = {'Leonid': 'Leonhard', 'Benuli': 'Bernoulli', "Benuli's": "Bernoulli's", 'Benulis,': 'Bernoullis,', 'Benulis': 'Bernoullis', 'Joanne': 'Johann', 'Benuli,': 'Bernoulli,'}
 def run(cmd): subprocess.run(cmd, check=True)
 
 def ass_time(t):
@@ -41,6 +44,7 @@ def captions(sh):
     fixed = []
     for i, w in enumerate(words):
         t = w[2]
+        t = FIXES.get(t, t)
         if t == 'Oh' and i + 1 < len(words) and words[i + 1][2].startswith('Euclid'): continue
         if t.startswith(',') and fixed and re.match(r'^[\d,]+$', fixed[-1][2]):
             fixed[-1] = (fixed[-1][0], w[1], fixed[-1][2] + t); continue
@@ -94,7 +98,7 @@ for sh in SHORTS:
     for k, (src, a, b) in enumerate(sh['segs']):
         p = os.path.join(TMP, f'{sid}_p{k}.mp4'); parts.append(p)
         run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(a), '-to', str(b), '-i', os.path.join(RAW, src + '.mp4'),
-             '-vf', ('crop=in_w:in_h*0.88:0:0,' if src.startswith('zoom') else 'crop=in_w:in_h*0.935:0:0,') + 'scale=996:556:force_original_aspect_ratio=increase,crop=996:556,fps=30,setsar=1',
+             '-vf', ('crop=in_w:in_h*0.88:0:0,' if src.startswith('zoom') else '' if src.startswith('phone') else 'crop=in_w:in_h*0.935:0:0,') + 'scale=996:556:force_original_aspect_ratio=increase,crop=996:556,fps=30,setsar=1',
              '-af', 'aresample=48000', '-ac', '2', '-c:v', 'libx264', '-crf', '16', '-preset', 'fast', '-c:a', 'aac', '-b:a', '192k', p])
     lst = os.path.join(TMP, sid + '_list.txt')
     open(lst, 'w').write(''.join(f"file '{p}'\n" for p in parts))
