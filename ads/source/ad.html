@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CTC Ad Renderer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=block" rel="stylesheet">
+<style>
+:root{
+  --blue:#1f4fd6; --blue2:#163fb4; --navy:#0b2470; --gold:#f5b70a; --gold2:#ffd257; --white:#fff;
+  --serif:'Playfair Display', Georgia, serif; --sans:'Inter', 'Liberation Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--blue)}
+body{font-family:var(--sans);color:var(--white);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 0%, #2a5ff0 0%, var(--blue) 45%, var(--blue2) 75%, var(--navy) 100%)}
+#bg{position:absolute;inset:0;pointer-events:none}
+.sym{position:absolute;font-family:var(--serif);font-style:italic;color:rgba(255,255,255,.07);white-space:nowrap}
+.brand{position:absolute;left:0;right:0;text-align:center;font-weight:700;letter-spacing:.32em;
+  color:var(--gold);font-size:13px;z-index:5}
+.brand .rule{display:block;width:44px;height:2px;background:var(--gold);margin:10px auto 0}
+.scene{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:0 34px;opacity:0}
+.kicker{font-size:14px;font-weight:700;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+h1{font-family:var(--serif);font-weight:800;font-size:46px;line-height:1.08;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--gold)}
+h2{font-family:var(--serif);font-weight:800;font-size:34px;line-height:1.12}
+h2 em{font-style:normal;color:var(--gold)}
+.sub{font-size:19px;line-height:1.4;color:rgba(255,255,255,.9);font-weight:500}
+.gap{height:18px}.gap2{height:30px}
+.dayrow{width:100%;max-width:440px}
+.day{font-family:var(--serif);font-weight:800;font-size:26px;margin-bottom:12px}
+.chips{display:flex;gap:10px;justify-content:center}
+.chip{flex:1;background:#fff;color:var(--navy);border-radius:14px;padding:14px 0;font-weight:800;font-size:22px;
+  box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.chip small{font-size:13px;font-weight:700;margin-left:2px}
+.chip.g{background:var(--gold);color:var(--navy)}
+.et{font-size:15px;color:rgba(255,255,255,.85);font-weight:600}
+.cards{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px}
+.card{background:#fff;color:var(--navy);border-radius:20px;padding:20px 22px;text-align:left;position:relative;
+  box-shadow:0 10px 0 rgba(0,0,0,.18)}
+.card.g{background:var(--gold)}
+.card .nm{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;opacity:.75}
+.card .pr{font-family:var(--serif);font-weight:900;font-size:50px;line-height:1.05}
+.card .pr span{font-family:var(--sans);font-size:17px;font-weight:700;margin-left:4px}
+.card .ds{font-size:16px;font-weight:600;line-height:1.35}
+.list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px;text-align:left}
+.li{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);
+  border-radius:16px;padding:14px 16px;font-size:19px;font-weight:600;line-height:1.25}
+.li b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;
+  align-items:center;justify-content:center;font-weight:900;font-size:17px}
+.cta{background:var(--gold);color:var(--navy);font-weight:800;font-size:23px;border-radius:999px;padding:18px 30px;
+  box-shadow:0 8px 0 #b98700}
+.url{font-size:21px;font-weight:800;letter-spacing:.01em}
+.url2{font-size:16px;font-weight:600;color:rgba(255,255,255,.85)}
+.photo{width:210px;height:210px;border-radius:50%}
+.name{font-family:var(--serif);font-weight:800;font-size:32px}
+.tag{font-size:14px;font-weight:800;letter-spacing:.24em;color:var(--gold)}
+.pill{display:inline-block;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 16px;font-size:16px;font-weight:600;margin:4px}
+.strike{position:relative;display:inline-block}
+.compact{font-size:18px;font-weight:600;line-height:1.55}
+.compact b{color:var(--gold)}
+/* feed (4:5) is shorter: tighten */
+.feed h1{font-size:42px}.feed h2{font-size:31px}
+.feed .card{padding:14px 20px}.feed .card .pr{font-size:42px}
+.feed .li{padding:10px 14px;font-size:18px}.feed .gap2{height:20px}
+.feed .photo{width:170px;height:170px}
+.feed .cards{gap:12px}.feed .list{gap:9px}
+/* story (9:16): larger type for phones */
+.story .scene{zoom:1.12;padding:0 18px}
+#bar{position:absolute;left:0;height:4px;background:var(--gold);z-index:6}
+</style>
+</head>
+<body>
+<div id="stage"><div id="bg"></div><div class="brand" id="brand">COUNTING TO CALCULUS<span class="rule"></span></div><div id="bar"></div></div>
+<script>
+const P = new URLSearchParams(location.search);
+const AD = P.get('ad') || 'times';
+const FMT = P.get('fmt') || 'story';
+document.body.classList.add(FMT);
+
+// Safe zones: Reels/Stories UI covers ~14% top and ~30% bottom.
+const SAFE = FMT === 'story' ? {top: 150, bottom: 300} : {top: 70, bottom: 36};
+document.getElementById('brand').style.top = (FMT === 'story' ? 112 : 30) + 'px';
+document.getElementById('bar').style.top = (FMT === 'story' ? 0 : 0) + 'px';
+
+const TIMES = `
+ <div class="dayrow a"><div class="day">Monday – Thursday</div>
+  <div class="chips"><div class="chip">5<small>PM</small></div><div class="chip">6<small>PM</small></div><div class="chip">7<small>PM</small></div><div class="chip">8<small>PM</small></div></div></div>
+ <div class="gap2"></div>
+ <div class="dayrow a"><div class="day">Saturday</div>
+  <div class="chips"><div class="chip g">12<small>PM</small></div><div class="chip g">1<small>PM</small></div><div class="chip g">2<small>PM</small></div><div class="chip g">3<small>PM</small></div></div></div>
+ <div class="gap"></div>
+ <div class="et a">All times Eastern · live online, from anywhere</div>`;
+
+const TIMES_COMPACT = `<div class="compact a">Mon–Thu: <b>5, 6, 7 or 8 PM</b> ET<br>Saturday: <b>12, 1, 2 or 3 PM</b> ET</div>`;
+
+const CTA = (btn, extra) => `
+ <div class="kicker a">Step 1 is free</div><div class="gap"></div>
+ <h2 class="a">Start with a <em>free placement assessment</em></h2><div class="gap2"></div>
+ <div class="cta a pop">${btn} →</div><div class="gap2"></div>
+ <div class="url a">tinyurl.com/CountingToCalculus</div><div class="gap"></div>
+ <div class="url2 a">Call / WhatsApp 612-616-9899</div>
+ ${extra ? `<div class="gap"></div><div class="url2 a">${extra}</div>` : ''}`;
+
+const PRICES = `
+ <div class="cards">
+  <div class="card a pop"><div class="nm">Live Class</div><div class="pr">$300<span>/ month</span></div>
+   <div class="ds">Math <u>or</u> English · per subject</div></div>
+  <div class="card g a pop"><div class="nm">Small Group · 4–6 students</div><div class="pr">$750<span>/ month</span></div>
+   <div class="ds">Math <u>and</u> Science · same tutor every week</div></div>
+ </div>`;
+
+const ADS = {
+ // 1 — schedule-led, both offers
+ times: { music: 'bright', scenes: [
+  [0, 3.4, `<div class="kicker a">Live · online · certified tutors</div><div class="gap"></div>
+            <h1 class="a">Math & English classes that <em>fit your family's week</em></h1>`],
+  [3.4, 7.9, `<div class="kicker a">Pick your time</div><div class="gap2"></div>${TIMES}`],
+  [7.9, 11.4, `<div class="kicker a">Two ways to join</div><div class="gap2"></div>${PRICES}`],
+  [11.4, 15, CTA('Book your free assessment', 'Month to month · Summer included')],
+ ]},
+ // 2 — problem → solution, Live Class $300
+ gaps: { music: 'warm', scenes: [
+  [0, 3.2, `<h1 class="a">Schools have to keep moving.</h1><div class="gap"></div><h1 class="a"><em>Gaps get left behind.</em></h1>`],
+  [3.2, 7.2, `<div class="kicker a">Here's the fix</div><div class="gap2"></div>
+     <div class="list"><div class="li a"><b>1</b>Free placement assessment finds the gaps</div>
+     <div class="li a"><b>2</b>Live classes close them, with mastery before speed</div>
+     <div class="li a"><b>3</b>Your child moves forward, all the way to calculus</div></div>`],
+  [7.2, 11, `<div class="kicker a">Live Class</div><div class="gap"></div>
+     <div class="cards"><div class="card a pop"><div class="pr">$300<span>/ month</span></div><div class="ds">per subject · Math or English</div></div></div>
+     <div class="gap2"></div>${TIMES_COMPACT}`],
+  [11, 15, CTA('Book a free assessment', 'No contract · Summer included')],
+ ]},
+ // 3 — Small Group $750
+ group: { music: 'bright', scenes: [
+  [0, 3.2, `<h1 class="a">4–6 students.</h1><div class="gap"></div><h1 class="a"><em>One tutor who knows your child.</em></h1>`],
+  [3.2, 7.2, `<div class="kicker a">Small Group includes</div><div class="gap2"></div>
+     <div class="list"><div class="li a"><b>✓</b>Math and Science, both live every week</div>
+     <div class="li a"><b>✓</b>A personal learning plan, updated every term</div>
+     <div class="li a"><b>✓</b>A 1-on-1 mentor check-in every month</div>
+     <div class="li a"><b>✓</b>Help between sessions</div></div>`],
+  [7.2, 11, `<div class="kicker a">Small Group</div><div class="gap"></div>
+     <div class="cards"><div class="card g a pop"><div class="pr">$750<span>/ month</span></div><div class="ds">Math + Science together</div></div></div>
+     <div class="gap2"></div>${TIMES_COMPACT}`],
+  [11, 15, CTA('Reserve a seat', 'Seats in each group are limited')],
+ ]},
+ // 4 — founder-led
+ amos: { music: 'warm', scenes: [
+  [0, 3.2, `<h1 class="a">Top of the class?</h1><div class="gap"></div><h1 class="a"><em>That's where we start.</em></h1>`],
+  [3.2, 7.2, `<img class="photo a pop" src="amos.png"><div class="gap"></div>
+     <div class="name a">Amos Tarfa</div><div class="tag a">AMOSTHEMATHGUY</div><div class="gap"></div>
+     <div class="a"><span class="pill">Founder, Counting to Calculus</span><span class="pill">Instructor, MIT Gateway to AI Initiative</span><span class="pill">20 years teaching math & science</span></div>`],
+  [7.2, 11, `<div class="kicker a">Live classes, after school & Saturdays</div><div class="gap2"></div>${PRICES}`],
+  [11, 15, CTA('Book a free assessment', 'Mon–Thu 5–8 PM ET · Sat 12–3 PM ET')],
+ ]},
+};
+const ad = ADS[AD];
+const TOTAL = ad.scenes[ad.scenes.length - 1][1];
+window.TOTAL = TOTAL; window.MUSIC = ad.music;
+
+const stage = document.getElementById('stage');
+const H = stage.clientHeight;
+const scenes = ad.scenes.map(([s, e, html]) => {
+  const el = document.createElement('div');
+  el.className = 'scene'; el.innerHTML = html;
+  el.style.top = SAFE.top + 'px'; el.style.bottom = SAFE.bottom + 'px';
+  stage.appendChild(el);
+  const items = [...el.querySelectorAll('.a')];
+  return {s, e, el, items};
+});
+
+// floating math symbols (history-of-math motif)
+const SYMS = ['∫ f(x) dx','π','a² + b² = c²','Σ','dy/dx','e^{iπ} + 1 = 0','√2','∞','f′(x)','sin θ','x = −b ± √(b²−4ac) / 2a','Δ','φ','lim','H₂O','F = ma'];
+const bg = document.getElementById('bg');
+const syms = SYMS.map((txt, i) => {
+  const d = document.createElement('div'); d.className = 'sym'; d.textContent = txt;
+  const r = (k) => { const x = Math.sin(i * 91.7 + k * 13.3) * 43758.5453; return x - Math.floor(x); };
+  const o = {d, x: r(1) * 100, y: r(2) * 100, sp: 6 + r(3) * 10, size: 18 + r(4) * 34, rot: (r(5) - .5) * 24};
+  d.style.fontSize = o.size + 'px'; bg.appendChild(d); return o;
+});
+
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+const backOut = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+window.render = (t) => {
+  const W = stage.clientWidth;
+  syms.forEach(o => {
+    const y = ((o.y - t * o.sp * 0.6) % 110 + 110) % 110 - 5;
+    o.d.style.transform = `translate(${o.x / 100 * W - 40}px, ${y / 100 * H}px) rotate(${o.rot}deg)`;
+  });
+  document.getElementById('bar').style.width = (t / TOTAL * 100) + '%';
+  scenes.forEach((sc, idx) => {
+    const last = idx === scenes.length - 1;
+    const local = t - sc.s;
+    const inV = clamp(local / 0.25);
+    const outV = last ? 1 : clamp((sc.e - t) / 0.3);
+    const vis = t >= sc.s - 0.001 && (last || t < sc.e);
+    sc.el.style.opacity = vis ? Math.min(inV, outV) : 0;
+    sc.el.style.transform = `scale(${1 + (1 - outV) * 0.04})`;
+    sc.items.forEach((it, k) => {
+      const p = clamp((local - 0.08 - k * 0.16) / 0.5);
+      if (it.classList.contains('pop')) {
+        it.style.opacity = clamp(p * 2.5);
+        it.style.transform = `scale(${0.6 + 0.4 * backOut(p)})`;
+      } else {
+        it.style.opacity = easeOut(p);
+        it.style.transform = `translateY(${(1 - easeOut(p)) * 26}px)`;
+      }
+    });
+    // gentle pulse on the CTA button in the last scene
+    if (last) sc.el.querySelectorAll('.cta').forEach(b => {
+      const q = Math.max(0, local - 1.2);
+      b.style.transform = `scale(${1 + 0.035 * Math.sin(q * 5.5) * (q > 0 ? 1 : 0)})`;
+    });
+  });
+};
+window.render(0);
+window.READY = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = r))));
+</script>
+</body>
+</html>
