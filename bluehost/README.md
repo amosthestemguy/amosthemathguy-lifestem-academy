@@ -21,7 +21,7 @@ The `nigeria/` folder is the whole "For Nigerian Schools" site:
 6. Open https://nigeria.countingtocalculus.org, then send one test order and one test demo request. Check that both arrive.
 
 ## Where the emails go
-support@countingtocalculus.org forwards to amosthestemguy@gmail.com. The daily check-in reads amostarfa1@gmail.com, so to have orders, pledges and demo requests logged automatically, add a Gmail filter in amosthestemguy@gmail.com that forwards messages from support@ (or with subjects starting "School book order", "Book interest pledge" or "School demo request") to amostarfa1@gmail.com.
+support@countingtocalculus.org forwards to amosthestemguy@gmail.com. The daily check-in reads amostarfa1@gmail.com, so to have orders, pledges and demo requests logged automatically, add a Gmail filter in amosthestemguy@gmail.com that forwards messages from support@ (or with subjects starting "Book interest pledge" or "School demo request") to amostarfa1@gmail.com.
 
 ## If the test email doesn't arrive
 - Check the spam folder.
