@@ -34,3 +34,9 @@ Every recording you make becomes 3 videos. Each one has a different job.
 - **Left out:** student names and the scheduling talk.
 
 To rebuild it, run `python3 mk.py` from the folder that holds `frame.png`, `end.png` and the source proxy.
+
+## Clip rules (Amos-approved, Nov 2026)
+- The 5-minute sample format is approved.
+- **Always start a clip at the start of a problem or key idea.** Never start mid-explanation. The first sentence should set up the question, e.g. "What happens if somebody asks you..." or "So now we're going to talk about...".
+- End on a payoff, such as the answer or the "aha" moment, and then show the end card.
+- Leave out student names and any scheduling or admin talk.
