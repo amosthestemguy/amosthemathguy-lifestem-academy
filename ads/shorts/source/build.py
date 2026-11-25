@@ -26,7 +26,7 @@ SHORTS = [
 if len(sys.argv) > 3:
     SHORTS = json.load(open(sys.argv[3]))
 VARIANT = sys.argv[4] if len(sys.argv) > 4 else 'social'   # 'social' (9:16, class times + prices) or 'linkedin' (4:5, PD close)
-FIXES = {'Leonid': 'Leonhard', 'Benuli': 'Bernoulli', "Benuli's": "Bernoulli's", 'Benulis,': 'Bernoullis,', 'Benulis': 'Bernoullis', 'Joanne': 'Johann', 'Benuli,': 'Bernoulli,'}
+FIXES = {'Leonid': 'Leonhard', 'Benuli': 'Bernoulli', "Benuli's": "Bernoulli's", 'Benulis,': 'Bernoullis,', 'Benulis': 'Bernoullis', 'Joanne': 'Johann', 'Benuli,': 'Bernoulli,', 'air': 'AI', 'fident': 'confident'}
 def run(cmd): subprocess.run(cmd, check=True)
 
 def ass_time(t):
@@ -35,7 +35,8 @@ def ass_time(t):
 
 def captions(sh):
     words, off = [], 0.0
-    for src, a, b in sh['segs']:
+    for seg in sh['segs']:
+        src, a, b = seg[:3]
         for seg in json.load(open(os.path.join(RAW, src + '.json'))):
             for w in seg['words']:
                 if w['s'] >= a - 0.05 and w['e'] <= b + 0.05:
@@ -104,10 +105,17 @@ for sh in SHORTS:
     sid = sh['id']
     # 1) cut + concat source segments, normalise to 25fps / 48k
     parts = []
-    for k, (src, a, b) in enumerate(sh['segs']):
+    for k, seg in enumerate(sh['segs']):
+        src, a, b = seg[:3]; mode = seg[3] if len(seg) > 3 else None
         p = os.path.join(TMP, f'{sid}_p{k}.mp4'); parts.append(p)
+        if isinstance(mode, (int, float)):   # vertical phone video: landscape slice centred on the face (fraction of height)
+            vf = f'crop=in_w:in_w*556/996:0:in_h*{mode}-in_w*278/996,scale=996:556,fps=30,setsar=1'
+        elif mode == 'fit':                  # whiteboard: keep the whole board, pad with white
+            vf = 'scale=996:556:force_original_aspect_ratio=decrease,pad=996:556:(ow-iw)/2:(oh-ih)/2:white,fps=30,setsar=1'
+        else:
+            vf = ('crop=in_w:in_h*0.88:0:0,' if src.startswith('zoom') else '' if src.startswith('phone') else 'crop=in_w:in_h*0.935:0:0,') + 'scale=996:556:force_original_aspect_ratio=increase,crop=996:556,fps=30,setsar=1'
         run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(a), '-to', str(b), '-i', os.path.join(RAW, src + '.mp4'),
-             '-vf', ('crop=in_w:in_h*0.88:0:0,' if src.startswith('zoom') else '' if src.startswith('phone') else 'crop=in_w:in_h*0.935:0:0,') + 'scale=996:556:force_original_aspect_ratio=increase,crop=996:556,fps=30,setsar=1',
+             '-vf', vf,
              '-af', 'aresample=48000', '-ac', '2', '-c:v', 'libx264', '-crf', '16', '-preset', 'fast', '-c:a', 'aac', '-b:a', '192k', p])
     lst = os.path.join(TMP, sid + '_list.txt')
     open(lst, 'w').write(''.join(f"file '{p}'\n" for p in parts))
