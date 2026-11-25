@@ -171,12 +171,18 @@
 "date": "2026-11-24",
 "c2c_facebook": 0,
 "life_facebook": 1,
-"instagram": null
+"instagram": 158
 },
 {
 "date": "2026-11-25",
-"c2c_facebook": 0,
-"life_facebook": 4,
+"c2c_facebook": 228,
+"life_facebook": 131,
 "instagram": null
+},
+{
+"date": "2026-11-26",
+"c2c_facebook": 117,
+"life_facebook": 41,
+"instagram": 0
 }
 ]
