@@ -84,6 +84,10 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
 .bk figcaption { display: grid; gap: .1rem; margin-top: .6rem; font-size: .86rem; color: var(--ink-2); }
 .bk figcaption b { color: var(--ink); font-size: 1rem; }
 .bk-ex { color: #B98700; font-weight: 800; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.intent { border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 10px; padding: .8rem 1rem; margin: 0; display: grid; gap: .55rem; background: var(--panel); }
+.intent legend { font-weight: 800; padding: 0 .3rem; }
+.form .intent label { display: flex; gap: .55rem; align-items: flex-start; font-weight: 500; }
+.form .intent input { width: 1.2rem; height: 1.2rem; padding: 0; margin-top: .15rem; flex: none; accent-color: #0B2470; }
 </style>
 </head>
 <body>
@@ -101,7 +105,7 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
   <!-- VIEW: choose -->
   <section id="choose-view">
     <h2>What would you like to order?</h2>
-    <p class="sub">Pick one. You'll enter how many books each class needs. This signals your interest and costs nothing; we follow up to confirm.</p>
+    <p class="sub">Pick one. You'll enter how many books each class needs and how many maths teachers you have. <b>Not ready to commit?</b> Send an estimate: it helps us print enough books for your school, costs nothing and you can change it later. When you're ready, send a firm order.</p>
     <div class="choices">
       <a class="choice" href="#grades" id="go-grades">
         <div class="kick" style="color:var(--orange)">Every class</div>
@@ -158,6 +162,10 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
   <section id="details-view" hidden>
     <h2>Your school's details</h2>
     <form class="form" id="schoolform">
+      <fieldset class="intent"><legend>Is this an estimate or a firm order?</legend>
+        <label><input type="radio" name="intent" value="estimate" checked> <span><b>An estimate for planning.</b> Our numbers may change. Nothing is charged and there is no commitment.</span></label>
+        <label><input type="radio" name="intent" value="firm"> <span><b>A firm order.</b> Please confirm our order in writing and send the 50% deposit request.</span></label>
+      </fieldset>
       <div class="two">
         <label for="s-school">School name<input id="s-school" name="school" required autocomplete="organization"></label>
         <label for="s-name">Your name<input id="s-name" name="name" required autocomplete="name"></label>
@@ -167,10 +175,13 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
         <label for="s-state">State and LGA<input id="s-state" name="state" placeholder="e.g. FCT, AMAC"></label>
         <label for="s-ward">Ward / coordinator (if any)<input id="s-ward" name="ward" placeholder="e.g. Lugbe ward coordinator"></label>
         <label for="s-pupils">Total pupils in the school (optional)<input id="s-pupils" name="pupils" type="number" min="0"></label>
+        <label for="s-teachers">Number of maths teachers<input id="s-teachers" name="teachers" type="number" min="0" inputmode="numeric" placeholder="e.g. 4"></label>
+        <label for="s-when">When would you need the books?<select id="s-when" name="when"><option>January 2027 (2nd term)</option><option>April 2027 (3rd term)</option><option>September 2027 (new session)</option><option>Not sure yet</option></select></label>
+        <label for="s-training">Would your maths teachers like training?<select id="s-training" name="training"><option>Yes</option><option>Maybe, tell us more</option><option>Not now</option></select></label>
       </div>
       <label for="s-note">Anything else? (optional)<textarea id="s-note" name="note" placeholder="Delivery address, questions, preferred delivery date"></textarea></label>
       <p class="err" id="form-err" hidden></p>
-      <div class="row"><button class="btn" type="submit" id="s-send">Send our interest</button><span class="hint">Goes to support@countingtocalculus.org. Nothing is charged.</span></div>
+      <div class="row"><button class="btn" type="submit" id="s-send">Send our estimate</button><span class="hint">Goes to support@countingtocalculus.org. Nothing is charged.</span></div>
       <div class="sent" id="sent" hidden></div>
     </form>
   </section>
@@ -281,14 +292,17 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
     const f = new FormData(ev.target);
     const copies = d.lines.reduce((a, l) => a + l[2], 0);
     const kind = current === 'exams' ? 'exam years' : 'grade levels';
+    const firm = f.get('intent') === 'firm';
     const body = 'BOOK INTEREST PLEDGE (not a payment) - Nigerian School of Mathematics, ' + kind +
+      '\nType: ' + (firm ? 'FIRM ORDER (please confirm and send deposit request)' : 'ESTIMATE for planning (numbers may change)') +
       '\n\nSchool: ' + f.get('school') + '\nName: ' + f.get('name') + '\nRole: ' + f.get('role') + '\nPhone/WhatsApp: ' + f.get('phone') + '\nEmail: ' + (f.get('email') || '') +
-      '\nState/LGA: ' + (f.get('state') || '') + '\nWard/coordinator: ' + (f.get('ward') || '') + '\nTotal pupils: ' + (f.get('pupils') || '') +
+      '\nState/LGA: ' + (f.get('state') || '') + '\nWard/coordinator: ' + (f.get('ward') || '') + '\nTotal pupils: ' + (f.get('pupils') || '') + '\nMaths teachers: ' + (f.get('teachers') || 'not given') + '\nBooks needed by: ' + f.get('when') + '\nTeacher training: ' + f.get('training') +
       '\n\nCopies:\n' + d.lines.map((l) => l[0] + ' | ' + l[1] + ' | ' + l[2]).join('\n') +
       '\nTotal copies: ' + copies + '\nEstimated value: ' + naira(d.total) + '\n\nNotes: ' + (f.get('note') || '');
-    deliver('Book interest pledge: ' + f.get('school') + ' (' + copies + ' copies, Nigeria ' + kind + ')', body);
+    deliver('Book interest pledge: ' + f.get('school') + ' (' + (firm ? 'firm order' : 'estimate') + ', ' + copies + ' copies, Nigeria ' + kind + ')', body);
   });
 
+  document.querySelectorAll('input[name=intent]').forEach((r) => r.addEventListener('change', () => { $('s-send').textContent = r.value === 'firm' && r.checked ? 'Send our order' : 'Send our estimate'; }));
   update(); show();
 })();
 </script>
