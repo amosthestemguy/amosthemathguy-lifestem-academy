@@ -43,6 +43,11 @@
 .r1-warn { color: var(--color-bad); font-size: var(--cds-font-size-caption); }
 .r1-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: var(--cds-pad-md) 0; }
 .r1 a { color: inherit; }
+.r1-bar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: end; justify-content: space-between; margin-top: var(--cds-gap-sm); }
+.r1-bar label { display: flex; flex-direction: column; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.r1 tr.r1-day td { border-top: 2px solid var(--color-border-line); }
+.r1 td.r1-dayname { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+.r1 td.r1-prev { white-space: normal; min-width: 240px; max-width: 520px; }
 </style>
 
 <div class="r1">
@@ -79,6 +84,28 @@
       <div class="r1-big"><span data-draw="published" data-source="post_totals" data-field="published" data-row="0">—</span><span class="r1-of"> / </span><span data-draw="scheduled" data-source="post_totals" data-field="scheduled" data-row="0">—</span></div>
       <p class="r1-note">Across both Facebook Pages, Instagram and YouTube</p>
     </div>
+  </section>
+
+  <section id="posted">
+    <h2>Posted recently</h2>
+    <p class="r1-cap">Everything that went out in the last 7 days, newest first, from the post list the 9:30 AM check-in refreshes each morning. Times are Mountain.</p>
+    <div class="r1-tiles">
+      <div class="r1-tile" id="posted-today"><div class="r1-lbl">Posted today</div><div class="r1-big" data-draw="p_today" data-source="posted_counts" data-field="today" data-row="0">—</div></div>
+      <div class="r1-tile" id="posted-yesterday"><div class="r1-lbl">Posted yesterday</div><div class="r1-big" data-draw="p_yesterday" data-source="posted_counts" data-field="yesterday" data-row="0">—</div></div>
+      <div class="r1-tile" id="posted-week"><div class="r1-lbl">Last 7 days</div><div class="r1-big" data-draw="p_week" data-source="posted_counts" data-field="week" data-row="0">—</div></div>
+    </div>
+    <div class="r1-bar">
+      <label for="posted-platform">Platform<select class="dash-select" id="posted-platform" aria-label="Platform">
+        <option value="">All platforms</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="youtube">YouTube</option><option value="linkedin">LinkedIn</option><option value="x">X</option>
+      </select></label>
+    </div>
+    <div class="r1-tw">
+      <table data-source="posts" data-row-key="post_id">
+        <thead><tr><th data-field="published">Day and time</th><th data-field="video">What went out</th><th data-field="channel">Account</th><th data-field="platform">Platform</th><th class="r1-n" data-field="views">Views</th><th data-field="url">Link</th></tr></thead>
+        <tbody data-draw="postedtable"></tbody>
+      </table>
+    </div>
+    <p class="r1-empty" data-draw="postedempty">—</p>
   </section>
 
   <section id="paid">
@@ -155,8 +182,8 @@ window.R1 = {
     let ok = true;
     try {
       const db = await claude.use('db');
-      if (id) await db.doc('data/leads/' + id).set(row);
-      else await db.collection('data/leads').add(row);
+      if (id) await db.doc('data/leads/rows/' + id).set(row);
+      else await db.collection('data/leads/rows').add(row);
     } catch (e) { ok = false; }
     document.querySelectorAll('#unsaved').forEach((p) => { p.hidden = ok; });
     return ok;
@@ -342,5 +369,73 @@ document.querySelectorAll('#leadform').forEach((form) => {
     const ok = await R1.saveLead(null, { date: new Date().toISOString(), who, source: f.get('source'), program: f.get('program'), stage: 'New lead', note: String(f.get('note') || '').trim() });
     if (ok) form.querySelectorAll('#lead-name, #lead-notes').forEach((i) => { i.value = ''; });
   });
+});
+</script>
+
+<script>
+window.R1P = {
+  day: (iso) => new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/Denver' }),
+  recent: (rows) => {
+    const cut = Date.now() - 7 * 864e5;
+    return rows.filter((p) => p.status === 'Published' && p.published && new Date(p.published).getTime() >= cut);
+  },
+};
+
+dash.calc('posted_counts', {
+  inputs: ['posts'],
+  title: 'Posts out today, yesterday and this week',
+  description: 'Counts published posts by their Mountain-time date: today, yesterday, and the last 7 days.',
+  fn: (posts) => {
+    const day = (iso) => new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/Denver' });
+    const today = day(Date.now()), yesterday = day(Date.now() - 864e5);
+    const cut = Date.now() - 7 * 864e5;
+    const pub = posts.filter((p) => p.status === 'Published' && p.published);
+    return [{
+      today: pub.filter((p) => day(p.published) === today).length,
+      yesterday: pub.filter((p) => day(p.published) === yesterday).length,
+      week: pub.filter((p) => new Date(p.published).getTime() >= cut).length,
+    }];
+  },
+});
+
+['p_today', 'p_yesterday', 'p_week'].forEach((name) => {
+  const f = { p_today: 'today', p_yesterday: 'yesterday', p_week: 'week' }[name];
+  dash.draw(name, (el) => {
+    const c = dash.data('posted_counts');
+    el.textContent = c.status === 'ok' && c.data && c.data[0] ? R1.fmt(c.data[0][f]) : '—';
+  });
+});
+
+document.querySelectorAll('#posted-platform').forEach((sel) => {
+  sel.value = dash.params().platform || '';
+  sel.addEventListener('change', () => dash.setParams({ platform: sel.value || null }));
+});
+
+dash.draw('postedtable', (tb) => {
+  const d = dash.data('posts');
+  if (d.status !== 'ok') { tb.replaceChildren(); return; }
+  const plat = dash.params().platform || '';
+  const rows = R1P.recent(d.data).filter((r) => !plat || String(r.platform).toLowerCase() === plat)
+    .sort((a, b) => d3.descending(a.published, b.published));
+  let last = null;
+  tb.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.post_id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    const dk = R1P.day(r.published); const first = dk !== last; last = dk;
+    if (first) tr.className = 'r1-day';
+    const when = new Date(r.published).toLocaleString('en-US', { timeZone: 'America/Denver', weekday: first ? 'short' : undefined, month: first ? 'short' : undefined, day: first ? 'numeric' : undefined, hour: 'numeric', minute: '2-digit' });
+    const link = document.createElement('td');
+    if (r.url && /^https:\/\//.test(r.url)) { const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open'; link.append(a); } else link.textContent = '—';
+    tr.append(cell(when, first ? 'r1-dayname' : ''), cell(r.video, 'r1-prev'), cell(r.channel), cell(r.platform), cell(R1.fmt(R1.num(r.views)), 'r1-n'), link);
+    return tr;
+  }));
+});
+
+dash.draw('postedempty', (el) => {
+  const d = dash.data('posts');
+  const plat = dash.params().platform || '';
+  const n = d.status === 'ok' ? R1P.recent(d.data).filter((r) => !plat || String(r.platform).toLowerCase() === plat).length : 0;
+  el.hidden = d.status === 'loading' || (d.status === 'ok' && n > 0);
+  el.textContent = d.status === 'error' ? 'The post list didn’t load.' : 'Nothing published on this platform in the last 7 days.';
 });
 </script>
