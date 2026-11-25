@@ -14,7 +14,7 @@ $subject = preg_replace('/[\r\n]+/', ' ', $clean($_POST['subject'] ?? '', 200));
 $body    = $clean($_POST['body'] ?? '', 8000);
 $replyTo = filter_var($clean($_POST['email'] ?? '', 200), FILTER_VALIDATE_EMAIL);
 
-if ($subject === '' || $body === '' || stripos($subject, 'Book interest pledge') !== 0) { http_response_code(400); echo '{"ok":false,"error":"missing"}'; exit; }
+if ($subject === '' || $body === '' || (stripos($subject, 'Book interest pledge') !== 0 && stripos($subject, 'School demo request') !== 0)) { http_response_code(400); echo '{"ok":false,"error":"missing"}'; exit; }
 
 $headers = "From: Counting to Calculus <{$FROM}>\r\n";
 if ($replyTo) { $headers .= "Reply-To: {$replyTo}\r\n"; }

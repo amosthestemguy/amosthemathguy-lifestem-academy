@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Request a Demo · For Nigerian Schools</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <p style="margin:0 0 .4rem"><a href="./" style="color:#F5B70A;font-weight:700;text-decoration:none">← nigeria.countingtocalculus.org</a></p>
+    <div class="kick">Free for schools</div>
+    <h1>Request a demo or a free Maths Health Check</h1>
+    <p class="lede">In a 30-minute online demo we show you the books, a live lesson, how we support your maths teachers, and how we place learners and track their progress, with pricing for your school.</p>
+  </div>
+</header>
+<main class="wrap">
+  <section>
+    <form class="form" id="demoform">
+      <h2>Tell us about your school</h2>
+      <div class="two">
+        <label for="d-school">School name<input id="d-school" name="school" required autocomplete="organization"></label>
+        <label for="d-name">Your name<input id="d-name" name="name" required autocomplete="name"></label>
+        <label for="d-role">Your role<select id="d-role" name="role"><option>Proprietor / owner</option><option>Head teacher / principal</option><option>Head of mathematics</option><option>Teacher</option><option>Ward coordinator</option><option>Other</option></select></label>
+        <label for="d-phone">Phone / WhatsApp<input id="d-phone" name="phone" required autocomplete="tel" inputmode="tel"></label>
+        <label for="d-email">Email<input id="d-email" name="email" type="email" autocomplete="email"></label>
+        <label for="d-city">City and state<input id="d-city" name="city" required placeholder="e.g. Abuja, FCT"></label>
+        <label for="d-learners">Roughly how many learners in those classes?<input id="d-learners" name="learners" type="number" min="0"></label>
+        <label for="d-want">What would you like?<select id="d-want" name="want"><option>A 30-minute online demo</option><option>Free Maths Health Check for one class</option><option>Both</option></select></label>
+      </div>
+      <fieldset style="border:0;padding:0;margin:0"><legend style="font-weight:600;font-size:.92rem;margin-bottom:.3rem">Classes you would like to start with</legend>
+        <div class="checks" id="classes"></div>
+      </fieldset>
+      <label for="d-times">Good days and times to meet<input id="d-times" name="times" placeholder="e.g. Tuesdays after 2 pm"></label>
+      <label for="d-note">Anything else? (optional)<textarea id="d-note" name="note"></textarea></label>
+      <label for="d-website" style="position:absolute;left:-9999px" aria-hidden="true">Leave empty<input id="d-website" name="website" tabindex="-1" autocomplete="off"></label>
+      <div class="row"><button class="btn" type="submit" id="d-send">Request my demo</button><span class="hint">Sent straight to our team. We reply within two working days.</span></div>
+      <div class="sent" id="sent" hidden></div>
+    </form>
+  </section>
+</main>
+<footer>NO CHILD STUCK IN MATHEMATICS · NIGERIA.COUNTINGTOCALCULUS.ORG</footer>
+<script>
+(() => {
+  const SUPPORT = 'support@countingtocalculus.org';
+  const CLASSES = ['Nursery 1', 'Nursery 2', 'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'JSS 1', 'JSS 2', 'JSS 3', 'SS 1', 'SS 2', 'SS 3'];
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+  CLASSES.forEach((c, i) => { const l = el('label'); const b = el('input'); b.type = 'checkbox'; b.name = 'classes'; b.value = c; b.id = 'c' + i; l.append(b, document.createTextNode(c)); $('classes').append(l); });
+
+  function fallback(subject, body) {
+    const box = $('sent'); const text = 'To: ' + SUPPORT + '\nSubject: ' + subject + '\n\n' + body;
+    box.replaceChildren(el('strong', '', 'We could not send it automatically. Please send it yourself:'));
+    const pre = el('pre', '', text); const r = el('div', 'row');
+    const open = el('a', 'btn', 'Open my email app'); open.href = 'mailto:' + SUPPORT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    const wa = el('a', 'btn alt', 'Send on WhatsApp'); wa.href = 'https://wa.me/2348108441317?text=' + encodeURIComponent(subject + '\n\n' + body); wa.target = '_blank'; wa.rel = 'noopener';
+    r.append(open, wa); box.append(pre, r); box.hidden = false;
+  }
+
+  $('demoform').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const f = new FormData(ev.target);
+    const classes = f.getAll('classes');
+    const subject = 'School demo request: ' + f.get('school') + ' (' + f.get('want') + ')';
+    const body = 'SCHOOL DEMO REQUEST - Nigerian School of Mathematics\n\nSchool: ' + f.get('school') + '\nName: ' + f.get('name') + '\nRole: ' + f.get('role') +
+      '\nPhone/WhatsApp: ' + f.get('phone') + '\nEmail: ' + (f.get('email') || '') + '\nCity/State: ' + f.get('city') + '\nWants: ' + f.get('want') +
+      '\nClasses to start with: ' + (classes.length ? classes.join(', ') : 'not given') + '\nLearners in those classes: ' + (f.get('learners') || 'not given') +
+      '\nGood times to meet: ' + (f.get('times') || 'not given') + '\n\nNotes: ' + (f.get('note') || '');
+    const btn = $('d-send'); btn.disabled = true; btn.textContent = 'Sending…';
+    const data = new FormData(); data.append('subject', subject); data.append('body', body); data.append('email', f.get('email') || ''); data.append('website', f.get('website') || '');
+    fetch('send.php', { method: 'POST', body: data }).then((r) => r.json()).then((res) => {
+      if (!res.ok) throw new Error('not sent');
+      $('sent').replaceChildren(el('strong', '', 'Thank you! Your request has been sent.'), el('span', 'hint', 'We will contact you within two working days to set a time.'));
+      $('sent').hidden = false; ev.target.reset();
+    }).catch(() => fallback(subject, body)).finally(() => { btn.disabled = false; btn.textContent = 'Request my demo'; });
+  });
+})();
+</script>
+</body>
+</html>
