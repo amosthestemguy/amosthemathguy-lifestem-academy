@@ -48,6 +48,8 @@ def captions(sh):
         t = w[2]
         t = FIXES.get(t, t)
         if t == 'Oh' and i + 1 < len(words) and words[i + 1][2].startswith('Euclid'): continue
+        if t.startswith('-') and fixed:
+            fixed[-1] = (fixed[-1][0], w[1], fixed[-1][2] + t); continue
         if t.startswith(',') and fixed and re.match(r'^[\d,]+$', fixed[-1][2]):
             fixed[-1] = (fixed[-1][0], w[1], fixed[-1][2] + t); continue
         t = t.replace("elements", "Elements") if fixed and fixed[-1][2] == "Euclid's" else t
@@ -109,7 +111,8 @@ for sh in SHORTS:
         src, a, b = seg[:3]; mode = seg[3] if len(seg) > 3 else None
         p = os.path.join(TMP, f'{sid}_p{k}.mp4'); parts.append(p)
         if isinstance(mode, (int, float)):   # vertical phone video: landscape slice centred on the face (fraction of height)
-            vf = f'crop=in_w:in_w*556/996:0:in_h*{mode}-in_w*278/996,scale=996:556,fps=30,setsar=1'
+            vf = (f'crop=in_w:in_w:0:min(max(in_h*{mode}-in_w/2\\,0)\\,in_h-in_w),scale=556:556,split[f][g];'
+                  '[g]scale=996:996,crop=996:556,boxblur=30:2,eq=brightness=-0.08[bg];[bg][f]overlay=220:0,fps=30,setsar=1')
         elif mode == 'fit':                  # whiteboard: keep the whole board, pad with white
             vf = 'scale=996:556:force_original_aspect_ratio=decrease,pad=996:556:(ow-iw)/2:(oh-ih)/2:white,fps=30,setsar=1'
         else:
