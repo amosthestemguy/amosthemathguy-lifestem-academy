@@ -1,0 +1,109 @@
+<title>Order Counting to Calculus Books</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: navy masthead, then two book shelves (Classics, Nigeria) as card grids, then how-it-works and contact. */
+:root {
+  --bg: #F7F4EC; --panel: #FFFFFF; --ink: #0B2470; --ink-2: #44507A; --line: #E2DCCB;
+  --gold: #F5B70A; --gold-ink: #8A6400; --navy: #0B2470; --on-navy: #FFFFFF; --ph: #EEF1F8; --ph-line: #9AA6C8;
+  --btn: #0B2470; --btn-ink: #FFFFFF;
+  --display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --body: Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462;
+  --gold: #F5B70A; --gold-ink: #F5C842; --navy: #0A1238; --on-navy: #FFFFFF; --ph: #1E2752; --ph-line: #55618F;
+  --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462;
+  --gold: #F5B70A; --gold-ink: #F5C842; --navy: #0A1238; --on-navy: #FFFFFF; --ph: #1E2752; --ph-line: #55618F;
+  --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mast { background: var(--navy); color: var(--on-navy); margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: calc(env(safe-area-inset-top, 0px) + 2.6rem); padding-bottom: 2.4rem; }
+.kick { color: var(--gold); font-weight: 800; letter-spacing: .22em; font-size: .78rem; text-transform: uppercase; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.08; margin: .5rem 0 .8rem; text-wrap: balance; }
+.lede { max-width: 62ch; font-size: 1.08rem; opacity: .92; margin: 0; }
+.ship { display: inline-flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1.2rem; font-size: .92rem; }
+.ship span { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: .25rem .8rem; }
+main { padding-block: 2.4rem 3rem; display: flex; flex-direction: column; gap: 3rem; }
+h2 { font-family: var(--display); font-weight: 900; font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0 0 .35rem; text-wrap: balance; }
+.sub { color: var(--ink-2); margin: 0 0 1.4rem; max-width: 70ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1rem; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.cover { aspect-ratio: 3 / 4; max-width: 100%; border: 2px dashed var(--ph-line); background: var(--ph); border-radius: 8px; display: grid; place-items: center; color: var(--ink-2); font-size: .85rem; font-weight: 600; }
+.cover.wide { aspect-ratio: 16 / 9; }
+.vol { color: var(--gold-ink); font-weight: 800; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; }
+.title { font-family: var(--display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; margin: 0; }
+.meta { color: var(--ink-2); font-size: .9rem; margin: 0; }
+.price { font-weight: 800; font-size: 1.35rem; font-variant-numeric: tabular-nums; margin-top: auto; }
+.price small { font-weight: 500; font-size: .85rem; color: var(--ink-2); }
+.buy { display: block; text-align: center; text-decoration: none; background: var(--btn); color: var(--btn-ink); font-weight: 700; border-radius: 10px; padding: .7rem 1rem; }
+.buy:hover { filter: brightness(1.1); }
+.buy:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; padding: 0; margin: 0; list-style: none; counter-reset: s; }
+.steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1rem 1rem 3.2rem; position: relative; min-width: 0; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 1rem; top: 1rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--gold); color: #0B2470; font-weight: 800; display: grid; place-items: center; font-size: .85rem; }
+.note { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 10px; padding: 1rem 1.2rem; max-width: 80ch; }
+.note p { margin: .2rem 0; }
+.contact { font-weight: 700; user-select: all; }
+footer { background: var(--gold); color: #0B2470; text-align: center; font-weight: 800; letter-spacing: .06em; padding-block: 1.1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)); margin-bottom: calc(-1 * env(safe-area-inset-bottom, 0px)); font-size: .85rem; }
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="kick">Counting to Calculus · Book orders</div>
+    <h1>Order the books</h1>
+    <p class="lede">Pre-order The Classics Library for Grades 5–12, or order Nigerian School of Mathematics textbooks and workbooks for your school. Pay securely by card through Stripe.</p>
+    <div class="ship"><span>Classics Library ships from January 2, 2027</span><span>Sample copy sent by email</span><span>Nigerian books printed in Abuja from December</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="classics">
+    <h2>The Classics Library</h2>
+    <p class="sub">Eight volumes. Read their lives, read their words, work their mathematics, from Euclid and al-Khwarizmi to Newton, Gauss and Turing. Grades 5–8 read the four eras; Grades 9–12 return to the same authors in the Source Books.</p>
+    <div class="grid">
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 1 · Grade 5</div><h3 class="title">Ancient Math History</h3><p class="meta">Reader · Euclid, Archimedes, Hypatia</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/8x200j9cU3f72kYgeL6EU0a" target="_blank" rel="noopener">Pre-order Volume 1</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 2 · Grade 6</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Reader · Aryabhata, al-Khwarizmi, Fibonacci</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/6oU14n74M02V8Jm0fN6EU0b" target="_blank" rel="noopener">Pre-order Volume 2</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 3 · Grade 7</div><h3 class="title">Early Modern Math History</h3><p class="meta">Reader · Kepler, Pascal, Newton, Euler</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/dRm28rgFm02V5xa0fN6EU0c" target="_blank" rel="noopener">Pre-order Volume 3</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 4 · Grade 8</div><h3 class="title">Science and Technology History</h3><p class="meta">Reader · Gauss, Lovelace, Maxwell, Turing</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/cNi3cv2OwbLD3p2e6D6EU0d" target="_blank" rel="noopener">Pre-order Volume 4</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 5 · Grade 9</div><h3 class="title">Ancient Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/4gM00jdtag1T5xa3rZ6EU0e" target="_blank" rel="noopener">Pre-order Volume 5</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 6 · Grade 10</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/dRmaEXexe9Dv6Be7If6EU0f" target="_blank" rel="noopener">Pre-order Volume 6</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 7 · Grade 11</div><h3 class="title">Early Modern Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/bJefZhdtaaHz4t61jR6EU0g" target="_blank" rel="noopener">Pre-order Volume 7</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 8 · Grade 12</div><h3 class="title">Science and Technology History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/9B6aEX88Q8zr7FibYv6EU0h" target="_blank" rel="noopener">Pre-order Volume 8</a></article>
+    </div>
+  </section>
+
+  <section id="nigeria">
+    <h2>Nigerian School of Mathematics</h2>
+    <p class="sub">A textbook and a workbook for every class, Nursery 1 to SS 3, written to the national curriculum and beyond, with exam practice for Common Entrance, BECE, WAEC, NECO and JAMB. Prices are charged in US dollars by card, at about the naira price shown. Choose your class at checkout; one class per payment.</p>
+    <div class="grid">
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Textbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$3.65 <small>≈ ₦5,000</small></div><a class="buy" href="https://buy.stripe.com/fZu6oH88QcPH2kY0fN6EU0i" target="_blank" rel="noopener">Order textbooks</a></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Workbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$1.80 <small>≈ ₦2,500</small></div><a class="buy" href="https://buy.stripe.com/14AfZhfBig1T3p2geL6EU0j" target="_blank" rel="noopener">Order workbooks</a></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year textbook</h3><p class="meta">Full exam practice, per pupil</p><div class="price">$9.25 <small>≈ ₦12,500</small></div><a class="buy" href="https://buy.stripe.com/eVqeVdcp68zr2kY4w36EU0k" target="_blank" rel="noopener">Order exam textbooks</a></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year workbook</h3><p class="meta">Exam practice workbook, per pupil</p><div class="price">$5.50 <small>≈ ₦7,500</small></div><a class="buy" href="https://buy.stripe.com/8x2dR9gFmdTLcZCbYv6EU0l" target="_blank" rel="noopener">Order exam workbooks</a></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">See the books first</div><h3 class="title">Exam-year sample set</h3><p class="meta">One textbook + one workbook, arrives early December</p><div class="price">$7.30 <small>≈ ₦10,000</small></div><a class="buy" href="https://buy.stripe.com/eVq14n1Ksg1T9Nq9Qn6EU0m" target="_blank" rel="noopener">Order a sample set</a></article>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How ordering works</h2>
+    <ol class="steps">
+      <li>Choose a book and press its button. Stripe's secure checkout opens in a new tab.</li>
+      <li>Pick how many copies, enter your shipping address and phone number, and pay by card.</li>
+      <li>You get a receipt by email. Classics Library buyers also get a sample copy by email.</li>
+      <li>Our team contacts you about shipping. Shipping is billed separately, and expedited shipping is available.</li>
+    </ol>
+  </section>
+
+  <section id="contact">
+    <div class="note">
+      <p><strong>Questions, school orders or webinars?</strong> Join one of our webinars to learn more about the program, or email us.</p>
+      <p class="contact">support@countingtocalculus.org</p>
+      <p>AmosTheMathGuy.com · countingtocalculus.org</p>
+    </div>
+  </section>
+</main>
+
+<footer>NO CHILD STUCK IN MATHEMATICS · COUNTING TO CALCULUS</footer>
