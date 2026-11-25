@@ -1,0 +1,334 @@
+<meta name="dash-one-writer">
+<meta name="dash-form" content="freeform">
+<style>
+.pt { display: flex; flex-direction: column; gap: var(--cds-gap-xl); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+.pt h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.pt h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs); }
+.pt-lede { font-size: var(--cds-font-size-heading); margin: var(--cds-gap-sm) 0 0; max-width: 64ch; }
+.pt-cap, .pt-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: var(--cds-gap-xs) 0 0; max-width: 80ch; }
+.pt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--cds-gap-md); }
+.pt-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+.pt-lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .06em; }
+.pt-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.3rem; line-height: 1.1; font-variant-numeric: tabular-nums; margin-top: var(--cds-gap-xs); }
+.pt-of { font-size: 1.05rem; color: var(--color-fg-muted); }
+.pt-track { height: 10px; border-radius: 999px; background: var(--cds-chart-grid); margin-top: var(--cds-gap-sm); overflow: hidden; }
+.pt-fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--color-ok); }
+.pt-tw { overflow-x: auto; margin-top: var(--cds-gap-sm); }
+.pt table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); }
+.pt th, .pt td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; vertical-align: top; }
+.pt th { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.pt td.n, .pt th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.pt td.wrap { white-space: normal; min-width: 200px; }
+.pt-pill { display: inline-block; font-size: var(--cds-font-size-caption); border-radius: 999px; padding: 1px 9px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); }
+.pt-pill.ok { border-color: var(--color-ok); color: var(--color-ok); }
+.pt-pill.warn { border-color: var(--color-warn); color: var(--color-warn); }
+.pt-mini { display: inline-block; width: 90px; height: 6px; border-radius: 999px; background: var(--cds-chart-grid); vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.pt-mini > span { display: block; height: 100%; background: var(--color-ok); }
+.pt-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--cds-gap-sm); align-items: end; margin-top: var(--cds-gap-sm); padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
+.pt-form label, .pt-bar label { display: flex; flex-direction: column; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); min-width: 0; }
+.pt-form input { font: inherit; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 7px 9px; min-width: 0; }
+.pt-form .wide { grid-column: span 2; }
+@media (max-width: 520px) { .pt-form .wide { grid-column: auto; } }
+.pt-btn { font: inherit; font-weight: var(--cds-font-weight-medium); border: 0; border-radius: var(--cds-radius); padding: 9px 14px; background: var(--color-fg); color: var(--color-bg); cursor: pointer; }
+.pt-btn:focus-visible, .pt-form input:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.pt-bar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: end; margin-top: var(--cds-gap-sm); }
+.pt-bar input { font: inherit; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 7px 9px; min-width: 220px; }
+.pt-warn { color: var(--color-bad); font-size: var(--cds-font-size-caption); }
+.pt-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: var(--cds-pad-md) 0; }
+.pt details summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+.pt tr.grp td { border-top: 2px solid var(--color-border-line); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); background: var(--color-panel); }
+</style>
+
+<div class="pt">
+  <header id="top">
+    <h1>Book Print Tracker</h1>
+    <p class="pt-lede" data-draw="lede">—</p>
+    <p class="pt-cap">The Classics Library and the Nigerian School of Mathematics books. A copy counts toward printing once its 50% deposit is in, and print runs are at least 100 copies. Nigerian books are printed in Abuja, starting in December.</p>
+  </header>
+
+  <section class="pt-tiles" id="tiles">
+    <div class="pt-tile" id="t-ready">
+      <div class="pt-lbl">Paid copies waiting to print</div>
+      <div class="pt-big"><span data-draw="k_toprint" data-source="totals" data-field="to_print" data-row="0">—</span><span class="pt-of"> of 100 for a run</span></div>
+      <div class="pt-track"><span class="pt-fill" data-draw="k_bar" data-source="totals" data-field="to_print" data-row="0"></span></div>
+    </div>
+    <div class="pt-tile" id="t-req">
+      <div class="pt-lbl">Copies requested</div>
+      <div class="pt-big" data-draw="k_req" data-source="totals" data-field="requested" data-row="0">—</div>
+      <p class="pt-note">All open orders, paid or not</p>
+    </div>
+    <div class="pt-tile" id="t-dep">
+      <div class="pt-lbl">Waiting on a deposit</div>
+      <div class="pt-big" data-draw="k_await" data-source="totals" data-field="awaiting_copies" data-row="0">—</div>
+      <p class="pt-note"><span data-draw="k_awaito" data-source="totals" data-field="awaiting_orders" data-row="0">—</span> orders to follow up</p>
+    </div>
+    <div class="pt-tile" id="t-titles">
+      <div class="pt-lbl">Titles ordered</div>
+      <div class="pt-big"><span data-draw="k_titles" data-source="totals" data-field="titles_ordered" data-row="0">—</span><span class="pt-of"> of <span data-draw="k_cat" data-source="totals" data-field="catalog_size" data-row="0">—</span></span></div>
+      <p class="pt-note">Books in the catalog with at least one order</p>
+    </div>
+  </section>
+
+  <section id="plan">
+    <h2>What to print</h2>
+    <p class="pt-cap">One row per book that has orders. "To print" counts only paid copies not yet printed, so the run never includes people who haven't committed.</p>
+    <div class="pt-tw">
+      <table data-source="print_plan" data-row-key="book_id">
+        <thead><tr><th data-field="title">Book</th><th data-field="series">Series</th><th class="n" data-field="requested">Requested</th><th class="n" data-field="paid">Deposit in</th><th class="n" data-field="printed">Printed</th><th class="n" data-field="to_print">To print</th><th data-field="state">Status</th></tr></thead>
+        <tbody data-draw="plantable"></tbody>
+      </table>
+    </div>
+    <p class="pt-empty" data-draw="planempty">—</p>
+  </section>
+
+  <section id="add">
+    <h2>Add an order</h2>
+    <p class="pt-cap">For orders from email, the website form, Facebook messages and school bulk orders. Add one row per book. A school ordering three titles is three rows.</p>
+    <form class="pt-form" id="orderform">
+      <label for="o-who">Customer (family, school or co-op)<input id="o-who" name="who" required autocomplete="off"></label>
+      <label for="o-kind">Customer type<select class="dash-select" id="o-kind" name="kind"><option>Family</option><option>School</option><option>Homeschool co-op</option><option>Church or organization</option></select></label>
+      <label for="o-src">Came from<select class="dash-select" id="o-src" name="source"><option>Email</option><option>Website order form</option><option>Facebook message</option><option>School bulk order</option><option>In person</option><option>Other</option></select></label>
+      <label for="o-book" class="wide">Book<select class="dash-select" id="o-book" name="book_id" data-draw="bookselect" data-source="catalog" aria-label="Book"></select></label>
+      <label for="o-qty">Copies<input id="o-qty" name="qty" type="number" min="1" step="1" value="1" required></label>
+      <label for="o-price">Price per copy (optional)<input id="o-price" name="price" type="number" min="0" step="0.01"></label>
+      <label for="o-status">Status<select class="dash-select" id="o-status" name="status"><option>Requested</option><option>Deposit paid (50%)</option><option>Paid in full</option></select></label>
+      <label for="o-contact">Contact (email or phone)<input id="o-contact" name="contact" autocomplete="off"></label>
+      <label for="o-note" class="wide">Notes<input id="o-note" name="note" autocomplete="off" placeholder="Grade, deadline, delivery address, what they asked"></label>
+      <button class="pt-btn" type="submit" id="o-add">Add order</button>
+    </form>
+    <p class="pt-warn" id="unsaved" hidden>That wasn't saved. Only editors of this tracker can add or change orders.</p>
+  </section>
+
+  <section id="orders">
+    <h2>Orders</h2>
+    <p class="pt-cap">Newest first. Change the status as each one pays its deposit, is printed and is delivered.</p>
+    <div class="pt-tw">
+      <table data-source="orders" data-row-key="id">
+        <thead><tr><th data-field="date">Added</th><th data-field="who">Customer</th><th data-field="kind">Type</th><th data-field="source">Came from</th><th data-field="book_title">Book</th><th class="n" data-field="qty">Copies</th><th class="n" data-field="price">Price</th><th data-field="status">Status</th><th data-field="note">Notes</th></tr></thead>
+        <tbody data-draw="orderstable"></tbody>
+      </table>
+    </div>
+    <p class="pt-empty" data-draw="ordersempty">—</p>
+  </section>
+
+  <section id="catalog">
+    <h2>Catalog checklist</h2>
+    <p class="pt-cap" data-draw="catcap">—</p>
+    <div class="pt-bar">
+      <label for="c-search">Find a book<input id="c-search" type="search" placeholder="Title, person or volume" autocomplete="off"></label>
+    </div>
+    <div class="pt-tw">
+      <table data-source="catalog" data-row-key="book_id">
+        <thead><tr><th data-field="book_id">#</th><th data-field="title">Book</th><th data-field="person">Built on</th><th data-field="series">Series</th><th data-field="grades">Grades</th><th data-field="format">Format</th><th class="n" data-field="lessons">Lessons</th><th class="n" data-field="price">Price</th></tr></thead>
+        <tbody data-draw="cattable"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+window.PT = {
+  RUN: 100,
+  STATUSES: ['Requested', 'Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered', 'Cancelled'],
+  PAID: ['Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered'],
+  DONE: ['Printed', 'Delivered'],
+  fmt: (v) => (v === null || v === undefined || v === '' || Number.isNaN(Number(v)) ? '—' : d3.format(',')(Number(v))),
+  money: (v) => (v === null || v === undefined || v === '' || Number.isNaN(Number(v)) ? '—' : '$' + d3.format(',.2f')(Number(v))),
+  search: '',
+  price: (v, cur) => (v === null || v === undefined || v === '' ? '—' : (cur === 'NGN' ? '₦' + d3.format(',')(Number(v)) : '$' + d3.format(',.2f')(Number(v)))),
+  async save(id, row) {
+    let ok = true;
+    try {
+      const db = await claude.use('db');
+      if (id) await db.doc('data/orders/rows/' + id).set(row);
+      else await db.collection('data/orders/rows').add(row);
+    } catch (e) { ok = false; }
+    document.querySelectorAll('#unsaved').forEach((p) => { p.hidden = ok; });
+    return ok;
+  },
+};
+
+dash.calc('print_plan', {
+  inputs: ['catalog', 'orders'],
+  title: 'Copies to print per book',
+  description: 'For each book with orders: copies requested (any open status), copies with the 50% deposit in, copies already printed, and paid copies still to print.',
+  fn: (catalog, orders) => {
+    const byId = new Map(catalog.map((b) => [String(b.book_id), b]));
+    const paid = ['Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered'];
+    const done = ['Printed', 'Delivered'];
+    const groups = d3.group(orders.filter((o) => o.status !== 'Cancelled'), (o) => String(o.book_id));
+    return [...groups].map(([id, rows]) => {
+      const q = (o) => Number(o.qty) || 0;
+      const b = byId.get(id) || {};
+      const requested = d3.sum(rows, q);
+      const p = d3.sum(rows.filter((o) => paid.includes(o.status)), q);
+      const printed = d3.sum(rows.filter((o) => done.includes(o.status)), q);
+      return { book_id: id, title: b.title || rows[0].book_title || id, series: b.series || '', requested, paid: p, printed, to_print: p - printed };
+    }).sort((a, b) => d3.descending(a.to_print, b.to_print) || d3.descending(a.requested, b.requested));
+  },
+});
+
+dash.calc('totals', {
+  inputs: ['catalog', 'orders'],
+  title: 'Order totals',
+  description: 'Copies requested, paid copies still to print, and orders still waiting on their 50% deposit, across every book.',
+  fn: (catalog, orders) => {
+    const open = orders.filter((o) => o.status !== 'Cancelled');
+    const q = (o) => Number(o.qty) || 0;
+    const paid = ['Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered'];
+    const done = ['Printed', 'Delivered'];
+    const waiting = open.filter((o) => o.status === 'Requested');
+    return [{
+      requested: d3.sum(open, q),
+      to_print: d3.sum(open.filter((o) => paid.includes(o.status) && !done.includes(o.status)), q),
+      awaiting_copies: d3.sum(waiting, q),
+      awaiting_orders: waiting.length,
+      titles_ordered: new Set(open.map((o) => String(o.book_id))).size,
+      catalog_size: catalog.length,
+    }];
+  },
+});
+
+const tileField = { k_toprint: 'to_print', k_req: 'requested', k_await: 'awaiting_copies', k_awaito: 'awaiting_orders', k_titles: 'titles_ordered', k_cat: 'catalog_size' };
+Object.keys(tileField).forEach((name) => {
+  dash.draw(name, (el) => {
+    const t = dash.data('totals');
+    el.textContent = t.status === 'ok' && t.data && t.data[0] ? PT.fmt(t.data[0][tileField[name]]) : '—';
+  });
+});
+
+dash.draw('k_bar', (el) => {
+  const t = dash.data('totals');
+  const v = t.status === 'ok' && t.data && t.data[0] ? t.data[0].to_print : 0;
+  el.style.width = Math.min(100, (100 * v) / PT.RUN) + '%';
+});
+
+dash.draw('lede', (el) => {
+  const t = dash.data('totals'), p = dash.data('print_plan');
+  if (t.status !== 'ok' || !t.data || !t.data[0]) { el.textContent = '—'; return; }
+  const r = t.data[0];
+  if (!r.requested) { el.textContent = 'No orders yet. Add the first one below, and this page will count what to print as deposits come in.'; return; }
+  const top = p.status === 'ok' && p.data && p.data[0] && p.data[0].to_print > 0 ? p.data[0] : null;
+  const left = Math.max(0, PT.RUN - r.to_print);
+  el.textContent = `${PT.fmt(r.requested)} copies requested; ${PT.fmt(r.to_print)} have the 50% deposit in and are waiting to print` +
+    (left ? `, ${PT.fmt(left)} short of a 100-copy run.` : ', enough for a print run.') +
+    (top ? ` Most needed: ${top.title} (${PT.fmt(top.to_print)}).` : '');
+});
+
+dash.draw('plantable', (tb) => {
+  const d = dash.data('print_plan');
+  if (d.status !== 'ok' || !d.data) { tb.replaceChildren(); return; }
+  tb.replaceChildren(...d.data.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.book_id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    const st = document.createElement('td'); const pill = document.createElement('span');
+    if (r.to_print > 0) { pill.className = 'pt-pill ok'; pill.textContent = 'Ready: ' + PT.fmt(r.to_print) + ' paid'; }
+    else if (r.requested > r.printed) { pill.className = 'pt-pill warn'; pill.textContent = 'Waiting on deposits'; }
+    else { pill.className = 'pt-pill'; pill.textContent = 'All printed'; }
+    st.append(pill);
+    tr.append(cell(r.title, 'wrap'), cell(r.series), cell(PT.fmt(r.requested), 'n'), cell(PT.fmt(r.paid), 'n'), cell(PT.fmt(r.printed), 'n'), cell(PT.fmt(r.to_print), 'n'), st);
+    return tr;
+  }));
+});
+
+dash.draw('planempty', (el) => {
+  const d = dash.data('print_plan');
+  el.hidden = d.status === 'loading' || (d.status === 'ok' && d.data && d.data.length > 0);
+  el.textContent = d.status === 'error' ? 'The print plan didn’t load.' : 'Nothing to print yet. Books appear here as soon as someone orders them.';
+});
+
+dash.draw('bookselect', (sel) => {
+  const c = dash.data('catalog');
+  const prev = sel.value;
+  if (c.status !== 'ok') { sel.replaceChildren(new Option('Loading the catalog…', '')); return; }
+  const groups = d3.group(c.data, (b) => b.series || 'Other');
+  const opts = [];
+  for (const [series, books] of groups) {
+    const og = document.createElement('optgroup'); og.label = series;
+    books.forEach((b) => og.append(new Option(b.title + (b.person && !String(b.title).includes(b.person) ? ' (' + b.person + ')' : ''), b.book_id)));
+    opts.push(og);
+  }
+  sel.replaceChildren(...opts);
+  if (prev) sel.value = prev;
+});
+
+dash.draw('orderstable', (tb) => {
+  const d = dash.data('orders');
+  if (d.status !== 'ok') { tb.replaceChildren(); return; }
+  const rows = [...d.data].sort((a, b) => d3.descending(a.date || '', b.date || ''));
+  tb.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    const stTd = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'dash-select';
+    sel.setAttribute('aria-label', 'Status for ' + (r.who || 'this order'));
+    PT.STATUSES.forEach((s) => sel.append(new Option(s)));
+    sel.value = PT.STATUSES.includes(r.status) ? r.status : 'Requested';
+    sel.onchange = () => { const { id, ...rest } = r; PT.save(r.id, { ...rest, status: sel.value, updated: new Date().toISOString() }); };
+    stTd.append(sel);
+    tr.append(cell(r.date ? d3.timeFormat('%b %-d, %Y')(new Date(r.date)) : ''), cell(r.who), cell(r.kind), cell(r.source), cell(r.book_title, 'wrap'), cell(PT.fmt(r.qty), 'n'), cell(PT.price(r.price, r.currency), 'n'), stTd, cell([r.contact, r.note].filter(Boolean).join(' · '), 'wrap'));
+    return tr;
+  }));
+});
+
+dash.draw('ordersempty', (el) => {
+  const d = dash.data('orders');
+  el.hidden = d.status === 'loading' || (d.status === 'ok' && d.data.length > 0);
+  el.textContent = d.status === 'error' ? 'The orders didn’t load.' : 'No orders yet. Use the form above, or paste an order email into the chat and Claude will add it.';
+});
+
+dash.draw('catcap', (el) => {
+  const c = dash.data('catalog');
+  if (c.status !== 'ok') { el.textContent = '—'; return; }
+  const n = c.data.length, series = new Set(c.data.map((b) => b.series)).size;
+  el.textContent = `Every book we can print: ${d3.format(',')(n)} titles across ${series} series. Search to find one.`;
+});
+
+dash.draw('cattable', (tb) => {
+  const c = dash.data('catalog');
+  if (c.status !== 'ok') { tb.replaceChildren(); return; }
+  const q = PT.search.trim().toLowerCase();
+  const rows = c.data.filter((b) => !q || [b.title, b.person, b.series, b.book_id].join(' ').toLowerCase().includes(q));
+  let last = null;
+  const out = [];
+  rows.forEach((b) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(b.book_id);
+    if (b.series !== last) { tr.className = 'grp'; last = b.series; }
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    tr.append(cell(b.book_id), cell(b.title, 'wrap'), cell(b.person), cell(b.series), cell(b.grades), cell(b.format), cell(PT.fmt(b.lessons), 'n'), cell(PT.price(b.price, b.currency), 'n'));
+    out.push(tr);
+  });
+  tb.replaceChildren(...out);
+});
+
+document.querySelectorAll('#o-book').forEach((sel) => {
+  sel.addEventListener('change', () => {
+    const c = dash.data('catalog');
+    const b = c.status === 'ok' ? c.data.find((x) => String(x.book_id) === sel.value) : null;
+    document.querySelectorAll('#o-price').forEach((p) => { p.value = b && b.price !== null && b.price !== undefined && b.price !== '' ? b.price : ''; });
+  });
+});
+
+document.querySelectorAll('#c-search').forEach((inp) => {
+  inp.addEventListener('input', () => { PT.search = inp.value; dash.draw('cattable'); });
+});
+
+document.querySelectorAll('#orderform').forEach((form) => {
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const f = new FormData(form);
+    const who = String(f.get('who') || '').trim();
+    const bookId = String(f.get('book_id') || '');
+    if (!who || !bookId) return;
+    const c = dash.data('catalog');
+    const book = c.status === 'ok' ? c.data.find((b) => String(b.book_id) === bookId) : null;
+    const price = String(f.get('price') || '').trim();
+    const ok = await PT.save(null, {
+      date: new Date().toISOString(), who, kind: f.get('kind'), source: f.get('source'),
+      book_id: bookId, book_title: book ? book.title : bookId, qty: Math.max(1, Number(f.get('qty')) || 1),
+      price: price === '' ? null : Number(price), currency: book && book.currency ? book.currency : 'USD', status: f.get('status'),
+      contact: String(f.get('contact') || '').trim(), note: String(f.get('note') || '').trim(),
+    });
+    if (ok) form.querySelectorAll('#o-who, #o-note, #o-contact, #o-price').forEach((i) => { i.value = ''; });
+  });
+});
+</script>
