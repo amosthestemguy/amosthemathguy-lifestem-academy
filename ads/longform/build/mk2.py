@@ -29,7 +29,8 @@ print(out,'main',round(off,1))
 fc=[];ins=[]
 for i,(a,b) in enumerate(SEGS):
     ins+=['-ss',str(a),'-t',str(b-a),'-i',src];d=b-a
-    fc.append(f"[{i}:v]setpts=PTS-STARTPTS,fps=30[v{i}];[{i}:a]asetpts=PTS-STARTPTS,afade=t=in:d=0.12,afade=t=out:st={d-0.15}:d=0.15[a{i}]")
+    crop=(cfg["crop"]+",") if cfg.get("crop") else ""
+    fc.append(f"[{i}:v]{crop}setpts=PTS-STARTPTS,fps=30[v{i}];[{i}:a]asetpts=PTS-STARTPTS,afade=t=in:d=0.12,afade=t=out:st={d-0.15}:d=0.15[a{i}]")
 n=len(SEGS)
 fc.append(''.join(f"[v{i}][a{i}]" for i in range(n))+f"concat=n={n}:v=1:a=1[cv][ca]")
 fc.append(f"color={cfg.get('bg','white')}:s=1920x1080:r=30:d={off}[bg];[cv]scale=1804:730:force_original_aspect_ratio=decrease,setsar=1[sv];[bg][sv]overlay=(W-w)/2:110+(730-h)/2:shortest=1[b1];[b1][{n}:v]overlay[b2];[b2]ass={ass},format=yuv420p[vmain]")
