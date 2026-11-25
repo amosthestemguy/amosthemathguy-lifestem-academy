@@ -16,4 +16,5 @@ The Classics Library is Counting to Calculus's signature offering. Feature it ev
 - **Contact line:** countingtocalculus.org · Support@CountingToCalculus.org
 - **Prices:** never on LinkedIn or YouTube.
 - **Instagram:** write links as plain text.
-- **Launch post:** Nov 25, 2026, 4:05 PM MT, using `images/classics_library_collage.png`.
+- **Approval:** every Classics Library post needs Amos's approval before it goes out. Save it as a Posty draft until he approves it.
+- **Launch post:** saved as drafts in Posty on 4 channels (LinkedIn, both FB Pages, IG), image `images/classics_library_collage.png`. Waiting for approval.
