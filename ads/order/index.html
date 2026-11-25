@@ -233,7 +233,19 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
 
   // Delivers a message: opens the visitor's email app, and always shows the text with a copy button,
   // because some browsers and app views block email links.
-  function deliver(box, subject, body) {
+  // On our own website (countingtocalculus.org), send.php emails the message straight to the team.
+  // Anywhere else, or if that fails, fall back to the visitor's email app.
+  const DIRECT = /(^|\.)countingtocalculus\.org$/.test(location.hostname) ? 'send.php' : null;
+  function deliver(box, subject, body, replyTo) {
+    if (!DIRECT) return manual(box, subject, body);
+    box.replaceChildren(el('span', 'hint', 'Sending…')); box.hidden = false;
+    const d = new FormData(); d.append('subject', subject); d.append('body', body); d.append('email', replyTo || '');
+    fetch(DIRECT, { method: 'POST', body: d }).then((r) => r.json()).then((res) => {
+      if (!res.ok) throw new Error('not sent');
+      box.replaceChildren(el('strong', '', 'Thank you! It has been sent to our team.'), el('span', 'hint', 'We will reply by email within two working days.'));
+    }).catch(() => manual(box, subject, body));
+  }
+  function manual(box, subject, body) {
     const href = 'mailto:' + SUPPORT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     box.replaceChildren();
     box.append(el('strong', '', 'Almost done: send it from your email.'));
@@ -261,7 +273,7 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
     e.preventDefault();
     const f = new FormData(e.target);
     const body = 'Name: ' + f.get('name') + '\nEmail: ' + f.get('email') + '\n\nQuestion:\n' + f.get('question') + '\n\nCart:\n' + cartText();
-    deliver($('asksent'), 'Question before ordering: ' + f.get('name'), body);
+    deliver($('asksent'), 'Question before ordering: ' + f.get('name'), body, f.get('email'));
   });
 
   const rows = $('pledgerows');
@@ -280,7 +292,7 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
     const total = picks.reduce((a, [, q]) => a + q, 0);
     const body = 'BOOK INTEREST PLEDGE (not a payment)\n\nName: ' + f.get('name') + '\nEmail: ' + f.get('email') + '\nSchool/co-op/family: ' + (f.get('school') || '') + '\nCountry: ' + (f.get('country') || '') + '\nNeeded by: ' + f.get('when') +
       '\n\nCopies:\n' + picks.map(([k, q]) => k + ' | ' + byId[k].name + ' | ' + q).join('\n') + '\nTotal copies: ' + total + '\n\nNotes: ' + (f.get('note') || '');
-    deliver($('pledgesent'), 'Book interest pledge: ' + f.get('name') + ' (' + total + ' copies)', body);
+    deliver($('pledgesent'), 'Book interest pledge: ' + f.get('name') + ' (' + total + ' copies)', body, f.get('email'));
   });
 
   render();
