@@ -55,7 +55,7 @@ def captions(sh):
         t = t.replace("elements", "Elements") if fixed and fixed[-1][2] == "Euclid's" else t
         fixed.append((w[0], w[1], t))
     words = fixed
-    PAIRS = {('city', 'stud,'): ('C.T.', 'Studd:'), ('Club', 'Maxwell.'): ('Clerk', 'Maxwell.'), ('Club', 'Maxwell'): ('Clerk', 'Maxwell')}
+    PAIRS = {('great', 'based'): ('grade', 'based'), ('city', 'stud,'): ('C.T.', 'Studd:'), ('Club', 'Maxwell.'): ('Clerk', 'Maxwell.'), ('Club', 'Maxwell'): ('Clerk', 'Maxwell')}
     for k in range(len(words) - 1):
         rep = PAIRS.get((words[k][2], words[k + 1][2]))
         if rep:
