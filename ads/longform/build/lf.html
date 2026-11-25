@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800;900&family=Inter:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;color:#fff;background:transparent}
+.top{position:absolute;left:0;right:0;top:0;height:104px;background:#0b2470;display:flex;align-items:center;padding:0 48px;gap:28px}
+.brand{color:#f5b70a;font-weight:800;letter-spacing:.28em;font-size:22px;white-space:nowrap}
+.sep{width:2px;height:44px;background:rgba(255,255,255,.3)}
+.ttl{font-family:'Playfair Display',serif;font-weight:900;font-size:42px;flex:1}
+.ttl em{font-style:normal;color:#f5b70a}
+.clip{background:#f5b70a;color:#0b2470;font-weight:800;font-size:20px;letter-spacing:.12em;padding:10px 20px;border-radius:999px;white-space:nowrap}
+.lt{position:absolute;left:0;right:0;bottom:0;height:200px;background:linear-gradient(90deg,#163fb4,#1f4fd6 60%,#2a5ff0);display:flex;align-items:center;padding:0 48px;gap:30px;border-top:6px solid #f5b70a}
+.lt img{width:136px;height:136px;border-radius:50%;border:4px solid #f5b70a;object-fit:cover}
+.nm{font-family:'Playfair Display',serif;font-weight:900;font-size:50px;line-height:1}
+.nm small{font-family:Inter;font-weight:600;font-size:24px;opacity:.85;margin-left:14px;letter-spacing:.02em}
+.full{margin-top:14px;display:inline-flex;align-items:center;gap:14px;background:#0b2470;border-radius:12px;padding:10px 20px;font-weight:700;font-size:28px}
+.full b{color:#f5b70a}
+.tri{width:0;height:0;border-left:22px solid #f5b70a;border-top:13px solid transparent;border-bottom:13px solid transparent}
+.r{margin-left:auto;text-align:right;font-weight:700;font-size:24px;line-height:1.55}
+.r span{color:#f5b70a}
+.end{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#2a5ff0 0%,#1f4fd6 45%,#163fb4 75%,#0b2470 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.end .k{color:#f5b70a;font-weight:800;letter-spacing:.32em;font-size:24px}
+.end img{width:190px;height:190px;border-radius:50%;border:5px solid #f5b70a;margin-top:30px;object-fit:cover}
+.end h2{font-family:'Playfair Display',serif;font-weight:900;font-size:76px;line-height:1.08;margin-top:30px}
+.end h2 em{font-style:normal;color:#f5b70a}
+.end .t{margin-top:22px;font-size:32px;font-weight:600;opacity:.95}
+.end .cta{margin-top:34px;display:inline-flex;align-items:center;gap:18px;background:#f5b70a;color:#0b2470;font-weight:800;font-size:36px;border-radius:999px;padding:20px 40px;box-shadow:0 8px 0 #b98700}
+.end .cta .tri{border-left-color:#0b2470}
+.end .u{margin-top:36px;font-weight:800;font-size:30px;line-height:1.5}
+</style></head><body>
+<script>
+const P=new URLSearchParams(location.search);
+const title=P.get('title')||'', chan=P.get('chan')||'Counting to Calculus';
+if(P.get('mode')==='end'){
+ document.body.innerHTML=`<div class="end"><div class="k">${chan.toUpperCase()}</div><img src="amos.png">
+ <h2>That was just a clip.<br><em>Watch the full ${P.get('kind')||'lesson'}.</em></h2>
+ <div class="t">${P.get('sub')||''}</div>
+ <div class="cta"><span class="tri"></span>Full video on our YouTube channel</div>
+ <div class="u">AmosTheMathGuy.com · Amos@amosthemathguy.com</div></div>`;
+}else{
+ document.body.innerHTML=`<div class="top"><div class="brand">${chan.toUpperCase()}</div><div class="sep"></div><div class="ttl">${title}</div><div class="clip">CLIP FROM FULL ${(P.get('kind')||'lesson').toUpperCase()}</div></div>
+ <div class="lt"><img src="amos.png"><div><div class="nm">Amos Tarfa<small>AmosTheMathGuy</small></div>
+ <div class="full"><span class="tri"></span>To see the full video, go to our <b>YouTube page</b></div></div>
+ <div class="r">AmosTheMathGuy.com<br><span>Amos@amosthemathguy.com</span></div></div>`;
+}
+</script></body></html>
