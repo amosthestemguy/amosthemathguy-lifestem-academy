@@ -57,3 +57,15 @@ tr.ex td { background: rgba(245,183,10,.15); }
 .contact { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 12px; padding: 1.1rem 1.2rem; }
 .contact p { margin: .15rem 0; }
 footer { background: var(--gold); color: #0B2470; text-align: center; font-weight: 800; letter-spacing: .06em; padding: 1.1rem; font-size: .85rem; }
+
+.books { margin: 1.4rem 0 1.6rem; }
+.books h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.35rem; margin: 0 0 .3rem; }
+.bk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+.bk { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .8rem; min-width: 0; }
+.bk-pair { position: relative; aspect-ratio: 4 / 4.3; }
+.bk-pair svg { position: absolute; width: 74%; height: auto; border-radius: 4px; box-shadow: 0 4px 12px rgba(11,36,112,.22); }
+.bk-back { right: 0; top: 0; }
+.bk-front { left: 0; bottom: 0; }
+.bk figcaption { display: grid; gap: .1rem; margin-top: .6rem; font-size: .86rem; color: var(--ink-2); }
+.bk figcaption b { color: var(--ink); font-size: 1rem; }
+.bk-ex { color: #B98700; font-weight: 800; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
