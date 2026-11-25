@@ -48,6 +48,42 @@ h2 { font-family: var(--display); font-weight: 900; font-size: clamp(1.5rem, 3.4
 .note p { margin: .2rem 0; }
 .contact { font-weight: 700; user-select: all; }
 footer { background: var(--gold); color: #0B2470; text-align: center; font-weight: 800; letter-spacing: .06em; padding-block: 1.1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)); margin-bottom: calc(-1 * env(safe-area-inset-bottom, 0px)); font-size: .85rem; }
+.acts { display: flex; flex-direction: column; gap: .45rem; }
+.add { font: inherit; font-weight: 700; border: 0; border-radius: 10px; padding: .7rem 1rem; background: var(--btn); color: var(--btn-ink); cursor: pointer; }
+.add:focus-visible, .ghost:focus-visible, .btn2:focus-visible, .cartfab:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.buy.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-weight: 600; padding: .55rem 1rem; }
+.cartfab { position: fixed; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20; font: inherit; font-weight: 800; background: var(--gold); color: #0B2470; border: 0; border-radius: 999px; padding: .8rem 1.2rem; box-shadow: 0 6px 18px rgba(11,36,112,.3); cursor: pointer; }
+.cartfab b { background: #0B2470; color: #fff; border-radius: 999px; padding: .05rem .5rem; margin-left: .35rem; font-variant-numeric: tabular-nums; }
+.shade { position: fixed; inset: 0; background: rgba(5,10,30,.5); z-index: 30; }
+.drawer { box-sizing: border-box; position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: var(--bg); color: var(--ink); z-index: 31; overflow-y: auto; padding: calc(1rem + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(1.5rem + env(safe-area-inset-bottom, 0px)) 16px; box-shadow: -8px 0 30px rgba(0,0,0,.25); display: flex; flex-direction: column; gap: 1rem; }
+.dhead { display: flex; justify-content: space-between; align-items: center; }
+.dhead h2 { margin: 0; }
+.x { font: inherit; font-size: 1.4rem; background: none; border: 0; color: var(--ink); cursor: pointer; padding: .2rem .5rem; }
+.line { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .8rem; display: grid; gap: .5rem; }
+.line .nm { font-weight: 700; line-height: 1.3; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: space-between; }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.qty button { font: inherit; background: var(--panel); color: var(--ink); border: 0; width: 2.2rem; height: 2.2rem; cursor: pointer; }
+.qty span { min-width: 2.4rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 700; }
+.pay { text-decoration: none; background: var(--btn); color: var(--btn-ink); font-weight: 700; border-radius: 8px; padding: .5rem .8rem; font-size: .9rem; }
+.rm { font: inherit; background: none; border: 0; color: var(--ink-2); text-decoration: underline; cursor: pointer; font-size: .85rem; }
+.total { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.hint { color: var(--ink-2); font-size: .88rem; margin: 0; }
+.btn2 { font: inherit; font-weight: 700; border-radius: 10px; padding: .7rem 1rem; cursor: pointer; background: var(--panel); color: var(--ink); border: 1.5px solid var(--ink); }
+.form { display: grid; gap: .7rem; }
+.form label { display: grid; gap: .25rem; font-weight: 600; font-size: .9rem; }
+.form input, .form textarea, .form select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: .6rem .7rem; min-width: 0; width: 100%; box-sizing: border-box; }
+.form textarea { min-height: 6rem; resize: vertical; }
+.pledge { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.pledge td { padding: .45rem .3rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.pledge td:last-child { width: 6.5rem; }
+.pledge input { width: 6rem; }
+.tw { overflow-x: auto; }
+.sent { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 10px; padding: .9rem 1rem; display: grid; gap: .5rem; }
+.sent pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); border-radius: 8px; padding: .6rem; margin: 0; font-size: .82rem; max-height: 14rem; overflow: auto; }
+[hidden] { display: none !important; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .7rem; }
+@media (prefers-reduced-motion: no-preference) { .drawer { animation: slide .18s ease-out; } @keyframes slide { from { transform: translateX(30px); opacity: .6; } } }
 </style>
 
 <header class="mast">
@@ -64,14 +100,14 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
     <h2>The Classics Library</h2>
     <p class="sub">Eight volumes. Read their lives, read their words, work their mathematics, from Euclid and al-Khwarizmi to Newton, Gauss and Turing. Grades 5–8 read the four eras; Grades 9–12 return to the same authors in the Source Books.</p>
     <div class="grid">
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 1 · Grade 5</div><h3 class="title">Ancient Math History</h3><p class="meta">Reader · Euclid, Archimedes, Hypatia</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/8x200j9cU3f72kYgeL6EU0a" target="_blank" rel="noopener">Pre-order Volume 1</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 2 · Grade 6</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Reader · Aryabhata, al-Khwarizmi, Fibonacci</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/6oU14n74M02V8Jm0fN6EU0b" target="_blank" rel="noopener">Pre-order Volume 2</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 3 · Grade 7</div><h3 class="title">Early Modern Math History</h3><p class="meta">Reader · Kepler, Pascal, Newton, Euler</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/dRm28rgFm02V5xa0fN6EU0c" target="_blank" rel="noopener">Pre-order Volume 3</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 4 · Grade 8</div><h3 class="title">Science and Technology History</h3><p class="meta">Reader · Gauss, Lovelace, Maxwell, Turing</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/cNi3cv2OwbLD3p2e6D6EU0d" target="_blank" rel="noopener">Pre-order Volume 4</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 5 · Grade 9</div><h3 class="title">Ancient Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/4gM00jdtag1T5xa3rZ6EU0e" target="_blank" rel="noopener">Pre-order Volume 5</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 6 · Grade 10</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/dRmaEXexe9Dv6Be7If6EU0f" target="_blank" rel="noopener">Pre-order Volume 6</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 7 · Grade 11</div><h3 class="title">Early Modern Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/bJefZhdtaaHz4t61jR6EU0g" target="_blank" rel="noopener">Pre-order Volume 7</a></article>
-      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 8 · Grade 12</div><h3 class="title">Science and Technology History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><a class="buy" href="https://buy.stripe.com/9B6aEX88Q8zr7FibYv6EU0h" target="_blank" rel="noopener">Pre-order Volume 8</a></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 1 · Grade 5</div><h3 class="title">Ancient Math History</h3><p class="meta">Reader · Euclid, Archimedes, Hypatia</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V1">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/8x200j9cU3f72kYgeL6EU0a" target="_blank" rel="noopener">Buy now: Volume 1</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 2 · Grade 6</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Reader · Aryabhata, al-Khwarizmi, Fibonacci</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V2">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/6oU14n74M02V8Jm0fN6EU0b" target="_blank" rel="noopener">Buy now: Volume 2</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 3 · Grade 7</div><h3 class="title">Early Modern Math History</h3><p class="meta">Reader · Kepler, Pascal, Newton, Euler</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V3">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/dRm28rgFm02V5xa0fN6EU0c" target="_blank" rel="noopener">Buy now: Volume 3</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 4 · Grade 8</div><h3 class="title">Science and Technology History</h3><p class="meta">Reader · Gauss, Lovelace, Maxwell, Turing</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V4">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/cNi3cv2OwbLD3p2e6D6EU0d" target="_blank" rel="noopener">Buy now: Volume 4</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 5 · Grade 9</div><h3 class="title">Ancient Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V5">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/4gM00jdtag1T5xa3rZ6EU0e" target="_blank" rel="noopener">Buy now: Volume 5</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 6 · Grade 10</div><h3 class="title">Middle Ages Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V6">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/dRmaEXexe9Dv6Be7If6EU0f" target="_blank" rel="noopener">Buy now: Volume 6</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 7 · Grade 11</div><h3 class="title">Early Modern Math History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V7">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/bJefZhdtaaHz4t61jR6EU0g" target="_blank" rel="noopener">Buy now: Volume 7</a></div></article>
+      <article class="card"><div class="cover">Cover image</div><div class="vol">Volume 8 · Grade 12</div><h3 class="title">Science and Technology History</h3><p class="meta">Source Book · the primary sources, explained</p><div class="price">$79.99</div><div class="acts"><button type="button" class="add" data-id="CL-V8">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/9B6aEX88Q8zr7FibYv6EU0h" target="_blank" rel="noopener">Buy now: Volume 8</a></div></article>
     </div>
   </section>
 
@@ -79,18 +115,36 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
     <h2>Nigerian School of Mathematics</h2>
     <p class="sub">A textbook and a workbook for every class, Nursery 1 to SS 3, written to the national curriculum and beyond, with exam practice for Common Entrance, BECE, WAEC, NECO and JAMB. Prices are charged in US dollars by card, at about the naira price shown. Choose your class at checkout; one class per payment.</p>
     <div class="grid">
-      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Textbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$3.65 <small>≈ ₦5,000</small></div><a class="buy" href="https://buy.stripe.com/fZu6oH88QcPH2kY0fN6EU0i" target="_blank" rel="noopener">Order textbooks</a></article>
-      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Workbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$1.80 <small>≈ ₦2,500</small></div><a class="buy" href="https://buy.stripe.com/14AfZhfBig1T3p2geL6EU0j" target="_blank" rel="noopener">Order workbooks</a></article>
-      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year textbook</h3><p class="meta">Full exam practice, per pupil</p><div class="price">$9.25 <small>≈ ₦12,500</small></div><a class="buy" href="https://buy.stripe.com/eVqeVdcp68zr2kY4w36EU0k" target="_blank" rel="noopener">Order exam textbooks</a></article>
-      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year workbook</h3><p class="meta">Exam practice workbook, per pupil</p><div class="price">$5.50 <small>≈ ₦7,500</small></div><a class="buy" href="https://buy.stripe.com/8x2dR9gFmdTLcZCbYv6EU0l" target="_blank" rel="noopener">Order exam workbooks</a></article>
-      <article class="card"><div class="cover wide">Book image</div><div class="vol">See the books first</div><h3 class="title">Exam-year sample set</h3><p class="meta">One textbook + one workbook, arrives early December</p><div class="price">$7.30 <small>≈ ₦10,000</small></div><a class="buy" href="https://buy.stripe.com/eVq14n1Ksg1T9Nq9Qn6EU0m" target="_blank" rel="noopener">Order a sample set</a></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Textbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$3.65 <small>≈ ₦5,000</small></div><div class="acts"><button type="button" class="add" data-id="NG-TB">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/fZu6oH88QcPH2kY0fN6EU0i" target="_blank" rel="noopener">Buy now · textbooks</a></div></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Nursery 1 – SS 2</div><h3 class="title">Workbook</h3><p class="meta">Non-exam classes, per pupil</p><div class="price">$1.80 <small>≈ ₦2,500</small></div><div class="acts"><button type="button" class="add" data-id="NG-WB">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/14AfZhfBig1T3p2geL6EU0j" target="_blank" rel="noopener">Buy now · workbooks</a></div></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year textbook</h3><p class="meta">Full exam practice, per pupil</p><div class="price">$9.25 <small>≈ ₦12,500</small></div><div class="acts"><button type="button" class="add" data-id="NG-EX-TB">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/eVqeVdcp68zr2kY4w36EU0k" target="_blank" rel="noopener">Buy now · exam textbooks</a></div></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">Primary 6 · JSS 3 · SS 3</div><h3 class="title">Exam-year workbook</h3><p class="meta">Exam practice workbook, per pupil</p><div class="price">$5.50 <small>≈ ₦7,500</small></div><div class="acts"><button type="button" class="add" data-id="NG-EX-WB">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/8x2dR9gFmdTLcZCbYv6EU0l" target="_blank" rel="noopener">Buy now · exam workbooks</a></div></article>
+      <article class="card"><div class="cover wide">Book image</div><div class="vol">See the books first</div><h3 class="title">Exam-year sample set</h3><p class="meta">One textbook + one workbook, arrives early December</p><div class="price">$7.30 <small>≈ ₦10,000</small></div><div class="acts"><button type="button" class="add" data-id="NG-SAMPLE">Add to cart</button><a class="buy ghost" href="https://buy.stripe.com/eVq14n1Ksg1T9Nq9Qn6EU0m" target="_blank" rel="noopener">Buy now · a sample set</a></div></article>
     </div>
+  </section>
+
+  <section id="pledge">
+    <h2>Not ready to order? Pledge your interest</h2>
+    <p class="sub">Tell us how many copies you expect to need. A pledge is free and doesn't commit you to buy. It helps us print the right number of books so nothing runs out and nothing is wasted.</p>
+    <form class="form" id="pledgeform">
+      <div class="tw"><table class="pledge"><tbody id="pledgerows"></tbody></table></div>
+      <div class="two">
+        <label for="p-name">Your name<input id="p-name" name="name" required autocomplete="name"></label>
+        <label for="p-email">Email<input id="p-email" name="email" type="email" required autocomplete="email"></label>
+        <label for="p-school">School, co-op or family<input id="p-school" name="school" autocomplete="organization"></label>
+        <label for="p-country">Country<input id="p-country" name="country" autocomplete="country-name"></label>
+        <label for="p-when">When would you need them?<select id="p-when" name="when"><option>January 2027</option><option>Spring term 2027</option><option>Fall 2027</option><option>Not sure yet</option></select></label>
+      </div>
+      <label for="p-note">Anything else? (optional)<textarea id="p-note" name="note" placeholder="Grades, number of pupils, questions"></textarea></label>
+      <button class="add" type="submit" id="p-send">Send my pledge</button>
+      <div class="sent" id="pledgesent" hidden></div>
+    </form>
   </section>
 
   <section id="how">
     <h2>How ordering works</h2>
     <ol class="steps">
-      <li>Choose a book and press its button. Stripe's secure checkout opens in a new tab.</li>
+      <li>Add books to your cart, or press Buy now. Stripe's secure checkout opens in a new tab.</li>
       <li>Pick how many copies, enter your shipping address and phone number, and pay by card.</li>
       <li>You get a receipt by email. Classics Library buyers also get a sample copy by email.</li>
       <li>Our team contacts you about shipping. Shipping is billed separately, and expedited shipping is available.</li>
@@ -99,7 +153,7 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
 
   <section id="contact">
     <div class="note">
-      <p><strong>Questions, school orders or webinars?</strong> Join one of our webinars to learn more about the program, or email us.</p>
+      <p><strong>Questions, school orders or webinars?</strong> Join one of our webinars to learn more about the program, ask a question from your cart, or email us.</p>
       <p class="contact">support@countingtocalculus.org</p>
       <p>AmosTheMathGuy.com · countingtocalculus.org</p>
     </div>
@@ -107,3 +161,128 @@ footer { background: var(--gold); color: #0B2470; text-align: center; font-weigh
 </main>
 
 <footer>NO CHILD STUCK IN MATHEMATICS · COUNTING TO CALCULUS</footer>
+
+<button type="button" class="cartfab" id="cartfab" aria-haspopup="dialog">Cart <b id="cartcount">0</b></button>
+<div class="shade" id="shade" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="carttitle" hidden>
+  <div class="dhead"><h2 id="carttitle">Your cart</h2><button type="button" class="x" id="closecart" aria-label="Close cart">×</button></div>
+  <div id="lines"></div>
+  <p class="hint" id="empty">Your cart is empty. Add a book to get started.</p>
+  <div id="cartfoot" hidden>
+    <div class="row"><span>Total before shipping</span><span class="total" id="total">$0.00</span></div>
+    <p class="hint">Each book has its own secure Stripe checkout. Press <strong>Pay</strong> beside each one and set the same number of copies in the checkout. Shipping is billed separately.</p>
+  </div>
+  <button type="button" class="btn2" id="openask">Ask us a question before ordering</button>
+  <button type="button" class="btn2" id="topledge">Pledge interest instead</button>
+  <form class="form" id="askform" hidden>
+    <h3 style="margin:0">Ask us a question</h3>
+    <label for="q-name">Your name<input id="q-name" name="name" required autocomplete="name"></label>
+    <label for="q-email">Your email<input id="q-email" name="email" type="email" required autocomplete="email"></label>
+    <label for="q-text">Your question<textarea id="q-text" name="question" required></textarea></label>
+    <p class="hint">Your question goes to support@countingtocalculus.org, with your cart attached.</p>
+    <button class="add" type="submit">Send question</button>
+    <div class="sent" id="asksent" hidden></div>
+  </form>
+</aside>
+
+<script>
+(() => {
+  const ITEMS = [{"id": "CL-V1", "name": "Classics Library Vol 1: Ancient Math History (Grade 5 Reader)", "price": 79.99, "url": "https://buy.stripe.com/8x200j9cU3f72kYgeL6EU0a"}, {"id": "CL-V2", "name": "Classics Library Vol 2: Middle Ages Math History (Grade 6 Reader)", "price": 79.99, "url": "https://buy.stripe.com/6oU14n74M02V8Jm0fN6EU0b"}, {"id": "CL-V3", "name": "Classics Library Vol 3: Early Modern Math History (Grade 7 Reader)", "price": 79.99, "url": "https://buy.stripe.com/dRm28rgFm02V5xa0fN6EU0c"}, {"id": "CL-V4", "name": "Classics Library Vol 4: Science and Technology History (Grade 8 Reader)", "price": 79.99, "url": "https://buy.stripe.com/cNi3cv2OwbLD3p2e6D6EU0d"}, {"id": "CL-V5", "name": "Classics Library Vol 5: Ancient Math History (Grade 9 Source Book)", "price": 79.99, "url": "https://buy.stripe.com/4gM00jdtag1T5xa3rZ6EU0e"}, {"id": "CL-V6", "name": "Classics Library Vol 6: Middle Ages Math History (Grade 10 Source Book)", "price": 79.99, "url": "https://buy.stripe.com/dRmaEXexe9Dv6Be7If6EU0f"}, {"id": "CL-V7", "name": "Classics Library Vol 7: Early Modern Math History (Grade 11 Source Book)", "price": 79.99, "url": "https://buy.stripe.com/bJefZhdtaaHz4t61jR6EU0g"}, {"id": "CL-V8", "name": "Classics Library Vol 8: Science and Technology History (Grade 12 Source Book)", "price": 79.99, "url": "https://buy.stripe.com/9B6aEX88Q8zr7FibYv6EU0h"}, {"id": "NG-TB", "name": "Nigerian School of Mathematics Textbook (Nursery 1 to SS 2)", "price": 3.65, "url": "https://buy.stripe.com/fZu6oH88QcPH2kY0fN6EU0i"}, {"id": "NG-WB", "name": "Nigerian School of Mathematics Workbook (Nursery 1 to SS 2)", "price": 1.8, "url": "https://buy.stripe.com/14AfZhfBig1T3p2geL6EU0j"}, {"id": "NG-EX-TB", "name": "Nigerian School of Mathematics Exam-year Textbook (P6, JSS 3, SS 3)", "price": 9.25, "url": "https://buy.stripe.com/eVqeVdcp68zr2kY4w36EU0k"}, {"id": "NG-EX-WB", "name": "Nigerian School of Mathematics Exam-year Workbook (P6, JSS 3, SS 3)", "price": 5.5, "url": "https://buy.stripe.com/8x2dR9gFmdTLcZCbYv6EU0l"}, {"id": "NG-SAMPLE", "name": "Nigerian School of Mathematics Exam-year Sample Set", "price": 7.3, "url": "https://buy.stripe.com/eVq14n1Ksg1T9Nq9Qn6EU0m"}];
+  const SUPPORT = 'support@countingtocalculus.org';
+  const byId = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
+  const money = (v) => '$' + v.toFixed(2);
+  let cart = {};
+  try { cart = JSON.parse(localStorage.getItem('ctc-cart') || '{}') || {}; } catch (e) { cart = {}; }
+  const save = () => { try { localStorage.setItem('ctc-cart', JSON.stringify(cart)); } catch (e) {} };
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+
+  function render() {
+    const ids = Object.keys(cart).filter((k) => byId[k] && cart[k] > 0);
+    $('cartcount').textContent = ids.reduce((a, k) => a + cart[k], 0);
+    const lines = $('lines'); lines.replaceChildren();
+    let total = 0;
+    ids.forEach((k) => {
+      const it = byId[k], q = cart[k]; total += it.price * q;
+      const box = el('div', 'line');
+      box.append(el('div', 'nm', it.name));
+      const r = el('div', 'row');
+      const qty = el('div', 'qty');
+      const minus = el('button', '', '−'); minus.type = 'button'; minus.setAttribute('aria-label', 'One fewer');
+      const plus = el('button', '', '+'); plus.type = 'button'; plus.setAttribute('aria-label', 'One more');
+      minus.onclick = () => { cart[k] = Math.max(0, q - 1); if (!cart[k]) delete cart[k]; save(); render(); };
+      plus.onclick = () => { cart[k] = q + 1; save(); render(); };
+      qty.append(minus, el('span', '', String(q)), plus);
+      const pay = el('a', 'pay', 'Pay ' + money(it.price * q)); pay.href = it.url; pay.target = '_blank'; pay.rel = 'noopener';
+      r.append(qty, pay);
+      const r2 = el('div', 'row'); r2.append(el('span', 'hint', money(it.price) + ' each · set ' + q + ' at checkout'));
+      const rm = el('button', 'rm', 'Remove'); rm.type = 'button'; rm.onclick = () => { delete cart[k]; save(); render(); }; r2.append(rm);
+      box.append(r, r2); lines.append(box);
+    });
+    $('total').textContent = money(total);
+    $('empty').hidden = ids.length > 0; $('cartfoot').hidden = ids.length === 0;
+    document.querySelectorAll('#pledgerows input').forEach((inp) => { if (!inp.dataset.touched) inp.value = cart[inp.dataset.id] || ''; });
+  }
+  function cartText() {
+    const ids = Object.keys(cart).filter((k) => byId[k] && cart[k] > 0);
+    return ids.length ? ids.map((k) => '- ' + byId[k].name + ' x ' + cart[k]).join('\n') : '(cart is empty)';
+  }
+  function openCart() { $('drawer').hidden = false; $('shade').hidden = false; $('closecart').focus(); }
+  function closeCart() { $('drawer').hidden = true; $('shade').hidden = true; $('cartfab').focus(); }
+
+  // Delivers a message: opens the visitor's email app, and always shows the text with a copy button,
+  // because some browsers and app views block email links.
+  function deliver(box, subject, body) {
+    const href = 'mailto:' + SUPPORT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    box.replaceChildren();
+    box.append(el('strong', '', 'Almost done: send it from your email.'));
+    box.append(el('span', 'hint', 'Press Open my email app to send it. If nothing opens, or it doesn\'t, copy the text below and email it to ' + SUPPORT + '.'));
+    const pre = el('pre', '', 'To: ' + SUPPORT + '\nSubject: ' + subject + '\n\n' + body);
+    const r = el('div', 'row');
+    const open = el('a', 'pay', 'Open my email app'); open.href = href;
+    const copy = el('button', 'btn2', 'Copy message'); copy.type = 'button';
+    copy.onclick = async () => {
+      try { await navigator.clipboard.writeText('To: ' + SUPPORT + '\nSubject: ' + subject + '\n\n' + body); copy.textContent = 'Copied'; }
+      catch (e) { const rg = document.createRange(); rg.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg); copy.textContent = 'Selected: press copy'; }
+    };
+    r.append(open, copy); box.append(pre, r); box.hidden = false;
+  }
+
+  document.querySelectorAll('.add[data-id]').forEach((b) => {
+    b.addEventListener('click', () => { const k = b.dataset.id; cart[k] = (cart[k] || 0) + 1; save(); render(); b.textContent = 'Added ✓'; setTimeout(() => { b.textContent = 'Add to cart'; }, 1200); openCart(); });
+  });
+  $('cartfab').onclick = openCart; $('closecart').onclick = closeCart; $('shade').onclick = closeCart;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('drawer').hidden) closeCart(); });
+  $('openask').onclick = () => { $('askform').hidden = false; $('q-name').focus(); };
+  $('topledge').onclick = () => { closeCart(); location.hash = 'pledge'; $('pledge').scrollIntoView(); };
+
+  $('askform').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const body = 'Name: ' + f.get('name') + '\nEmail: ' + f.get('email') + '\n\nQuestion:\n' + f.get('question') + '\n\nCart:\n' + cartText();
+    deliver($('asksent'), 'Question before ordering: ' + f.get('name'), body);
+  });
+
+  const rows = $('pledgerows');
+  ITEMS.forEach((it) => {
+    const tr = el('tr'); const td1 = el('td'); td1.append(el('div', 'nm', it.name)); td1.append(el('span', 'hint', money(it.price) + ' each'));
+    const td2 = el('td'); const inp = el('input'); inp.type = 'number'; inp.min = '0'; inp.step = '1'; inp.placeholder = '0'; inp.dataset.id = it.id;
+    inp.id = 'pl-' + it.id; inp.setAttribute('aria-label', 'Copies of ' + it.name);
+    inp.addEventListener('input', () => { inp.dataset.touched = '1'; });
+    td2.append(inp); tr.append(td1, td2); rows.append(tr);
+  });
+  $('pledgeform').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const picks = [...document.querySelectorAll('#pledgerows input')].map((i) => [i.dataset.id, parseInt(i.value, 10) || 0]).filter(([, q]) => q > 0);
+    if (!picks.length) { $('pledgesent').replaceChildren(el('span', 'hint', 'Enter how many copies of at least one book.')); $('pledgesent').hidden = false; return; }
+    const total = picks.reduce((a, [, q]) => a + q, 0);
+    const body = 'BOOK INTEREST PLEDGE (not a payment)\n\nName: ' + f.get('name') + '\nEmail: ' + f.get('email') + '\nSchool/co-op/family: ' + (f.get('school') || '') + '\nCountry: ' + (f.get('country') || '') + '\nNeeded by: ' + f.get('when') +
+      '\n\nCopies:\n' + picks.map(([k, q]) => k + ' | ' + byId[k].name + ' | ' + q).join('\n') + '\nTotal copies: ' + total + '\n\nNotes: ' + (f.get('note') || '');
+    deliver($('pledgesent'), 'Book interest pledge: ' + f.get('name') + ' (' + total + ' copies)', body);
+  });
+
+  render();
+  if (location.hash === '#cart') openCart();
+})();
+</script>

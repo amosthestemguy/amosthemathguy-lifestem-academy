@@ -55,12 +55,17 @@
     <div class="pt-tile" id="t-req">
       <div class="pt-lbl">Copies requested</div>
       <div class="pt-big" data-draw="k_req" data-source="totals" data-field="requested" data-row="0">—</div>
-      <p class="pt-note">All open orders, paid or not</p>
+      <p class="pt-note">Orders, paid or not (pledges counted separately)</p>
     </div>
     <div class="pt-tile" id="t-dep">
       <div class="pt-lbl">Waiting on a deposit</div>
       <div class="pt-big" data-draw="k_await" data-source="totals" data-field="awaiting_copies" data-row="0">—</div>
       <p class="pt-note"><span data-draw="k_awaito" data-source="totals" data-field="awaiting_orders" data-row="0">—</span> orders to follow up</p>
+    </div>
+    <div class="pt-tile" id="t-pledged">
+      <div class="pt-lbl">Copies pledged</div>
+      <div class="pt-big" data-draw="k_pledged" data-source="totals" data-field="pledged" data-row="0">—</div>
+      <p class="pt-note">Interest from the order page, not yet paid: use it to forecast</p>
     </div>
     <div class="pt-tile" id="t-titles">
       <div class="pt-lbl">Titles ordered</div>
@@ -71,10 +76,10 @@
 
   <section id="plan">
     <h2>What to print</h2>
-    <p class="pt-cap">One row per book that has orders. "To print" counts only paid copies not yet printed, so the run never includes people who haven't committed.</p>
+    <p class="pt-cap">One row per book that has orders. "To print now" counts only paid copies not yet printed. "Forecast" adds unpaid orders and pledges, so you can plan the next run.</p>
     <div class="pt-tw">
       <table data-source="print_plan" data-row-key="book_id">
-        <thead><tr><th data-field="title">Book</th><th data-field="series">Series</th><th class="n" data-field="requested">Requested</th><th class="n" data-field="paid">Deposit in</th><th class="n" data-field="printed">Printed</th><th class="n" data-field="to_print">To print</th><th data-field="state">Status</th></tr></thead>
+        <thead><tr><th data-field="title">Book</th><th data-field="series">Series</th><th class="n" data-field="pledged">Pledged</th><th class="n" data-field="requested">Ordered</th><th class="n" data-field="paid">Deposit in</th><th class="n" data-field="printed">Printed</th><th class="n" data-field="to_print">To print now</th><th class="n" data-field="forecast">Forecast</th><th data-field="state">Status</th></tr></thead>
         <tbody data-draw="plantable"></tbody>
       </table>
     </div>
@@ -87,11 +92,11 @@
     <form class="pt-form" id="orderform">
       <label for="o-who">Customer (family, school or co-op)<input id="o-who" name="who" required autocomplete="off"></label>
       <label for="o-kind">Customer type<select class="dash-select" id="o-kind" name="kind"><option>Family</option><option>School</option><option>Homeschool co-op</option><option>Church or organization</option></select></label>
-      <label for="o-src">Came from<select class="dash-select" id="o-src" name="source"><option>Email</option><option>Website order form</option><option>Facebook message</option><option>School bulk order</option><option>In person</option><option>Other</option></select></label>
+      <label for="o-src">Came from<select class="dash-select" id="o-src" name="source"><option>Email</option><option>Website order form</option><option>Website pledge</option><option>Facebook message</option><option>School bulk order</option><option>In person</option><option>Other</option></select></label>
       <label for="o-book" class="wide">Book<select class="dash-select" id="o-book" name="book_id" data-draw="bookselect" data-source="catalog" aria-label="Book"></select></label>
       <label for="o-qty">Copies<input id="o-qty" name="qty" type="number" min="1" step="1" value="1" required></label>
       <label for="o-price">Price per copy (optional)<input id="o-price" name="price" type="number" min="0" step="0.01"></label>
-      <label for="o-status">Status<select class="dash-select" id="o-status" name="status"><option>Requested</option><option>Deposit paid (50%)</option><option>Paid in full</option></select></label>
+      <label for="o-status">Status<select class="dash-select" id="o-status" name="status"><option>Requested</option><option>Pledged</option><option>Deposit paid (50%)</option><option>Paid in full</option></select></label>
       <label for="o-contact">Contact (email or phone)<input id="o-contact" name="contact" autocomplete="off"></label>
       <label for="o-note" class="wide">Notes<input id="o-note" name="note" autocomplete="off" placeholder="Grade, deadline, delivery address, what they asked"></label>
       <button class="pt-btn" type="submit" id="o-add">Add order</button>
@@ -129,7 +134,7 @@
 <script>
 window.PT = {
   RUN: 100,
-  STATUSES: ['Requested', 'Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered', 'Cancelled'],
+  STATUSES: ['Pledged', 'Requested', 'Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered', 'Cancelled'],
   PAID: ['Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered'],
   DONE: ['Printed', 'Delivered'],
   fmt: (v) => (v === null || v === undefined || v === '' || Number.isNaN(Number(v)) ? '—' : d3.format(',')(Number(v))),
@@ -160,10 +165,11 @@ dash.calc('print_plan', {
     return [...groups].map(([id, rows]) => {
       const q = (o) => Number(o.qty) || 0;
       const b = byId.get(id) || {};
-      const requested = d3.sum(rows, q);
+      const pledged = d3.sum(rows.filter((o) => o.status === 'Pledged'), q);
+      const requested = d3.sum(rows.filter((o) => o.status !== 'Pledged'), q);
       const p = d3.sum(rows.filter((o) => paid.includes(o.status)), q);
       const printed = d3.sum(rows.filter((o) => done.includes(o.status)), q);
-      return { book_id: id, title: b.title || rows[0].book_title || id, series: b.series || '', requested, paid: p, printed, to_print: p - printed };
+      return { book_id: id, title: b.title || rows[0].book_title || id, series: b.series || '', pledged, requested, paid: p, printed, to_print: p - printed, forecast: p + (requested - p) + pledged - printed };
     }).sort((a, b) => d3.descending(a.to_print, b.to_print) || d3.descending(a.requested, b.requested));
   },
 });
@@ -173,7 +179,8 @@ dash.calc('totals', {
   title: 'Order totals',
   description: 'Copies requested, paid copies still to print, and orders still waiting on their 50% deposit, across every book.',
   fn: (catalog, orders) => {
-    const open = orders.filter((o) => o.status !== 'Cancelled');
+    const all = orders.filter((o) => o.status !== 'Cancelled');
+    const open = all.filter((o) => o.status !== 'Pledged');
     const q = (o) => Number(o.qty) || 0;
     const paid = ['Deposit paid (50%)', 'Paid in full', 'Printed', 'Delivered'];
     const done = ['Printed', 'Delivered'];
@@ -183,13 +190,14 @@ dash.calc('totals', {
       to_print: d3.sum(open.filter((o) => paid.includes(o.status) && !done.includes(o.status)), q),
       awaiting_copies: d3.sum(waiting, q),
       awaiting_orders: waiting.length,
-      titles_ordered: new Set(open.map((o) => String(o.book_id))).size,
+      titles_ordered: new Set(all.map((o) => String(o.book_id))).size,
+      pledged: d3.sum(all.filter((o) => o.status === 'Pledged'), q),
       catalog_size: catalog.length,
     }];
   },
 });
 
-const tileField = { k_toprint: 'to_print', k_req: 'requested', k_await: 'awaiting_copies', k_awaito: 'awaiting_orders', k_titles: 'titles_ordered', k_cat: 'catalog_size' };
+const tileField = { k_pledged: 'pledged', k_toprint: 'to_print', k_req: 'requested', k_await: 'awaiting_copies', k_awaito: 'awaiting_orders', k_titles: 'titles_ordered', k_cat: 'catalog_size' };
 Object.keys(tileField).forEach((name) => {
   dash.draw(name, (el) => {
     const t = dash.data('totals');
@@ -224,9 +232,10 @@ dash.draw('plantable', (tb) => {
     const st = document.createElement('td'); const pill = document.createElement('span');
     if (r.to_print > 0) { pill.className = 'pt-pill ok'; pill.textContent = 'Ready: ' + PT.fmt(r.to_print) + ' paid'; }
     else if (r.requested > r.printed) { pill.className = 'pt-pill warn'; pill.textContent = 'Waiting on deposits'; }
+    else if (r.pledged > 0) { pill.className = 'pt-pill'; pill.textContent = 'Pledges only'; }
     else { pill.className = 'pt-pill'; pill.textContent = 'All printed'; }
     st.append(pill);
-    tr.append(cell(r.title, 'wrap'), cell(r.series), cell(PT.fmt(r.requested), 'n'), cell(PT.fmt(r.paid), 'n'), cell(PT.fmt(r.printed), 'n'), cell(PT.fmt(r.to_print), 'n'), st);
+    tr.append(cell(r.title, 'wrap'), cell(r.series), cell(PT.fmt(r.pledged), 'n'), cell(PT.fmt(r.requested), 'n'), cell(PT.fmt(r.paid), 'n'), cell(PT.fmt(r.printed), 'n'), cell(PT.fmt(r.to_print), 'n'), cell(PT.fmt(r.forecast), 'n'), st);
     return tr;
   }));
 });
