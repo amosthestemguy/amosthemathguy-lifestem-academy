@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>For Nigerian Schools</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: navy masthead with the two choices, then one of three views (choose, grade levels, exam years) shown by the page hash. */
+:root {
+  --bg: #F7F4EC; --panel: #FFFFFF; --ink: #0B2470; --ink-2: #44507A; --line: #E2DCCB;
+  --gold: #F5B70A; --orange: #E8762B; --navy: #0B2470; --on-navy: #FFFFFF; --soft: #FFF3CC;
+  --btn: #0B2470; --btn-ink: #FFFFFF;
+  --display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --body: Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462;
+  --gold: #F5B70A; --orange: #F08A45; --navy: #0A1238; --on-navy: #FFFFFF; --soft: #2A2A1E;
+  --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462;
+  --gold: #F5B70A; --orange: #F08A45; --navy: #0A1238; --on-navy: #FFFFFF; --soft: #2A2A1E;
+  --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); line-height: 1.5; margin: 0; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mast { background: var(--navy); color: var(--on-navy); margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: calc(env(safe-area-inset-top, 0px) + 2.4rem); padding-bottom: 2.2rem; }
+.kick { color: var(--gold); font-weight: 800; letter-spacing: .2em; font-size: .78rem; text-transform: uppercase; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1.06; margin: .5rem 0 .7rem; text-wrap: balance; }
+.lede { max-width: 60ch; font-size: 1.06rem; opacity: .92; margin: 0; }
+main { padding-block: 2rem 3rem; display: flex; flex-direction: column; gap: 2rem; }
+h2 { font-family: var(--display); font-weight: 900; font-size: clamp(1.5rem, 3.6vw, 2.1rem); margin: 0 0 .3rem; text-wrap: balance; }
+.sub { color: var(--ink-2); margin: 0 0 1.2rem; max-width: 68ch; }
+.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.choice { display: flex; flex-direction: column; gap: .5rem; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-top: 6px solid var(--orange); border-radius: 14px; padding: 1.3rem; min-width: 0; }
+.choice.exam { border-top-color: var(--gold); }
+.choice h3 { font-family: var(--display); font-weight: 900; font-size: 1.45rem; margin: 0; }
+.choice p { margin: 0; color: var(--ink-2); }
+.choice .go { margin-top: auto; font-weight: 800; color: var(--ink); }
+.choice:hover { box-shadow: 0 6px 20px rgba(11,36,112,.12); }
+.choice:focus-visible, .btn:focus-visible, .back:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .8rem; }
+.fact { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1rem; }
+.fact b { display: block; font-size: 1.05rem; }
+.fact span { color: var(--ink-2); font-size: .9rem; }
+.back { display: inline-block; font-weight: 700; color: var(--ink); text-decoration: none; margin-bottom: .6rem; }
+.tw { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { padding: .55rem .5rem; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+th { background: var(--navy); color: var(--on-navy); font-weight: 700; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+tr.ex td { background: var(--soft); }
+.cn { font-weight: 700; }
+.cp { color: var(--ink-2); font-size: .78rem; white-space: normal; }
+td:first-child { white-space: normal; min-width: 6.5rem; }
+td input { width: 3.6rem; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: .4rem .5rem; text-align: right; }
+tfoot td { font-weight: 800; }
+.est { font-weight: 800; font-size: 1.1rem; margin: .6rem 0 0; }
+@media (max-width: 480px) { th:last-child, td:last-child { display: none; } th, td { padding: .5rem .3rem; font-size: .88rem; } }
+.form { display: grid; gap: .8rem; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .8rem; }
+.form label { display: grid; gap: .25rem; font-weight: 600; font-size: .92rem; }
+.form input, .form textarea, .form select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: .6rem .7rem; min-width: 0; width: 100%; box-sizing: border-box; }
+.form textarea { min-height: 5rem; resize: vertical; }
+.btn { font: inherit; font-weight: 800; border: 0; border-radius: 10px; padding: .85rem 1.2rem; background: var(--btn); color: var(--btn-ink); cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
+.btn.alt { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.hint { color: var(--ink-2); font-size: .9rem; margin: 0; }
+.sent { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 10px; padding: 1rem; display: grid; gap: .6rem; }
+.sent pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); border-radius: 8px; padding: .7rem; margin: 0; font-size: .84rem; max-height: 16rem; overflow: auto; }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.err { color: #C0392B; font-weight: 600; margin: 0; }
+footer { background: var(--gold); color: #0B2470; text-align: center; font-weight: 800; letter-spacing: .06em; padding-block: 1.1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)); margin-bottom: calc(-1 * env(safe-area-inset-bottom, 0px)); font-size: .85rem; }
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap">
+    <div class="kick">Nigerian School of Mathematics · Counting to Calculus Africa</div>
+    <h1>For Nigerian Schools</h1>
+    <p class="lede">Mathematics textbooks and workbooks for every class, Nursery 1 to SS 3, written to the national curriculum and beyond. Tell us what your school needs and we will confirm your order, price and delivery date in writing.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- VIEW: choose -->
+  <section id="choose-view">
+    <h2>What would you like to order?</h2>
+    <p class="sub">Pick one. You'll enter how many books each class needs. This signals your interest and costs nothing; we follow up to confirm.</p>
+    <div class="choices">
+      <a class="choice" href="#grades" id="go-grades">
+        <div class="kick" style="color:var(--orange)">Every class</div>
+        <h3>Order for specific grade levels</h3>
+        <p>Nursery 1, Nursery 2, Primary 1–6, JSS 1–3 and SS 1–3. Choose the classes you want and how many books each one needs.</p>
+        <span class="go">Choose grade levels →</span>
+      </a>
+      <a class="choice exam" href="#exams" id="go-exams">
+        <div class="kick" style="color:#B98700">Exam years</div>
+        <h3>Order for the exam years</h3>
+        <p>Primary 6 (Common Entrance), JSS 3 (Junior WAEC / BECE) and SS 3 (WAEC, NECO, JAMB). Larger books with full exam practice.</p>
+        <span class="go">Choose exam years →</span>
+      </a>
+    </div>
+    <div class="facts" style="margin-top:1.4rem">
+      <div class="fact"><b>₦5,000 + ₦2,500</b><span>Textbook + workbook per pupil, each class</span></div>
+      <div class="fact"><b>₦12,500 + ₦7,500</b><span>Exam-year textbook + workbook per pupil</span></div>
+      <div class="fact"><b>50% deposit</b><span>To confirm; balance on delivery</span></div>
+      <div class="fact"><b>Printed in Abuja</b><span>Printing starts in December; delivered before next term</span></div>
+    </div>
+  </section>
+
+  <!-- VIEW: grade levels -->
+  <section id="grades-view" hidden>
+    <a class="back" href="#choose">← Back to both options</a>
+    <h2>Order for specific grade levels</h2>
+    <p class="sub">Enter how many textbooks and workbooks each class needs. Leave a class blank if you don't need it. Totals update as you type.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Class</th><th class="n">Textbooks</th><th class="n">Workbooks</th><th class="n">Subtotal</th></tr></thead>
+      <tbody id="grades-rows"></tbody>
+      <tfoot><tr><td>Total</td><td class="n" id="grades-tb">0</td><td class="n" id="grades-wb">0</td><td class="n" id="grades-total">₦0</td></tr></tfoot>
+    </table></div>
+    <p class="est">Estimated total: <span id="grades-est">₦0</span></p>
+    <p class="hint">Exam-year rows (shaded) use the larger exam books.</p>
+  </section>
+
+  <!-- VIEW: exam years -->
+  <section id="exams-view" hidden>
+    <a class="back" href="#choose">← Back to both options</a>
+    <h2>Order for the exam years</h2>
+    <p class="sub">Enter how many books each exam class needs. Want to see the books first? Add a sample set (one textbook and one workbook, ₦10,000), arriving early December.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Exam year</th><th class="n">Textbooks</th><th class="n">Workbooks</th><th class="n">Samples</th><th class="n">Subtotal</th></tr></thead>
+      <tbody id="exams-rows"></tbody>
+      <tfoot><tr><td>Total</td><td class="n" id="exams-tb">0</td><td class="n" id="exams-wb">0</td><td class="n" id="exams-sm">0</td><td class="n" id="exams-total">₦0</td></tr></tfoot>
+    </table></div>
+    <p class="est">Estimated total: <span id="exams-est">₦0</span></p>
+  </section>
+
+  <!-- shared school details form -->
+  <section id="details-view" hidden>
+    <h2>Your school's details</h2>
+    <form class="form" id="schoolform">
+      <div class="two">
+        <label for="s-school">School name<input id="s-school" name="school" required autocomplete="organization"></label>
+        <label for="s-name">Your name<input id="s-name" name="name" required autocomplete="name"></label>
+        <label for="s-role">Your role<select id="s-role" name="role"><option>Proprietor / owner</option><option>Head teacher / principal</option><option>Head of mathematics</option><option>Teacher</option><option>Ward coordinator</option><option>Other</option></select></label>
+        <label for="s-phone">Phone / WhatsApp<input id="s-phone" name="phone" required autocomplete="tel" inputmode="tel"></label>
+        <label for="s-email">Email<input id="s-email" name="email" type="email" autocomplete="email"></label>
+        <label for="s-state">State and LGA<input id="s-state" name="state" placeholder="e.g. FCT, AMAC"></label>
+        <label for="s-ward">Ward / coordinator (if any)<input id="s-ward" name="ward" placeholder="e.g. Lugbe ward coordinator"></label>
+        <label for="s-pupils">Total pupils in the school (optional)<input id="s-pupils" name="pupils" type="number" min="0"></label>
+      </div>
+      <label for="s-note">Anything else? (optional)<textarea id="s-note" name="note" placeholder="Delivery address, questions, preferred delivery date"></textarea></label>
+      <p class="err" id="form-err" hidden></p>
+      <div class="row"><button class="btn" type="submit" id="s-send">Send our interest</button><span class="hint">Goes to support@countingtocalculus.org. Nothing is charged.</span></div>
+      <div class="sent" id="sent" hidden></div>
+    </form>
+  </section>
+
+  <section id="pay-note">
+    <p class="hint">Ready to pay now by card? <a href="https://claude.ai/artifact/3QMnQt4UB6LCN2tcr9ihW8#nigeria" target="_blank" rel="noopener">Order online</a>. Questions: support@countingtocalculus.org · Victor Dauda Tarfa: +44 7830 123577 (UK) · +234 810 844 1317 (Nigeria).</p>
+  </section>
+</main>
+
+<footer>NO CHILD STUCK IN MATHEMATICS · COUNTINGTOCALCULUS.ONLINE</footer>
+
+<script>
+(() => {
+  const SUPPORT = 'support@countingtocalculus.org';
+  const CLASSES = [
+    ['N1', 'Nursery 1'], ['N2', 'Nursery 2'], ['P1', 'Primary 1'], ['P2', 'Primary 2'], ['P3', 'Primary 3'], ['P4', 'Primary 4'], ['P5', 'Primary 5'], ['P6', 'Primary 6'],
+    ['JSS1', 'JSS 1'], ['JSS2', 'JSS 2'], ['JSS3', 'JSS 3'], ['SS1', 'SS 1'], ['SS2', 'SS 2'], ['SS3', 'SS 3'],
+  ];
+  const EXAM = { P6: 'Common Entrance', JSS3: 'Junior WAEC (BECE)', SS3: 'WAEC, NECO and JAMB' };
+  const price = (c) => (EXAM[c] ? { tb: 12500, wb: 7500 } : { tb: 5000, wb: 2500 });
+  const SAMPLE = 10000;
+  const naira = (v) => '₦' + Math.round(v).toLocaleString('en-NG');
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+  const num = (inp) => Math.max(0, parseInt(inp.value, 10) || 0);
+  const qtyInput = (id, label) => { const i = el('input'); i.type = 'number'; i.min = '0'; i.step = '1'; i.placeholder = '0'; i.id = id; i.inputMode = 'numeric'; i.setAttribute('aria-label', label); return i; };
+
+  function buildRows(tbodyId, codes, withSample) {
+    const tb = $(tbodyId);
+    codes.forEach(([c, name]) => {
+      const p = price(c), tr = el('tr', EXAM[c] ? 'ex' : '');
+      const td = (x, cls) => { const d = el('td', cls); if (x instanceof Node) d.append(x); else d.textContent = x; return d; };
+      const a = qtyInput(tbodyId + '-' + c + '-tb', 'Textbooks for ' + name);
+      const b = qtyInput(tbodyId + '-' + c + '-wb', 'Workbooks for ' + name);
+      const first = el('td'); first.append(el('div', 'cn', name + (EXAM[c] && !withSample ? ' (exam year)' : ''))); first.append(el('div', 'cp', 'Textbook ' + naira(p.tb) + ' · Workbook ' + naira(p.wb)));
+      const cells = [first, td(a, 'n'), td(b, 'n')];
+      let s = null;
+      if (withSample) { s = qtyInput(tbodyId + '-' + c + '-sm', 'Sample sets for ' + name); cells.push(td(s, 'n')); }
+      const sub = td('₦0', 'n'); cells.push(sub);
+      tr.append(...cells); tb.append(tr);
+      tr.dataset.code = c;
+      [a, b, s].filter(Boolean).forEach((i) => i.addEventListener('input', update));
+    });
+  }
+  buildRows('grades-rows', CLASSES, false);
+  buildRows('exams-rows', CLASSES.filter(([c]) => EXAM[c]), true);
+
+  function collect(view) {
+    const rows = [...document.querySelectorAll('#' + view + '-rows tr')];
+    const lines = []; let total = 0, ntb = 0, nwb = 0, nsm = 0;
+    rows.forEach((tr) => {
+      const c = tr.dataset.code, p = price(c), name = CLASSES.find(([k]) => k === c)[1];
+      const ins = tr.querySelectorAll('input');
+      const tb = num(ins[0]), wb = num(ins[1]), sm = ins[2] ? num(ins[2]) : 0;
+      const sub = tb * p.tb + wb * p.wb + sm * SAMPLE;
+      tr.lastChild.textContent = naira(sub);
+      total += sub; ntb += tb; nwb += wb; nsm += sm;
+      const ex = EXAM[c] ? ' (exam year)' : '';
+      if (tb) lines.push(['NG-' + c + '-TB', name + ' Mathematics Textbook' + ex, tb]);
+      if (wb) lines.push(['NG-' + c + '-WB', name + ' Mathematics Workbook' + ex, wb]);
+      if (sm) lines.push(['NG-' + c + '-SAMPLE', name + ' sample set (textbook + workbook)', sm]);
+    });
+    return { lines, total, ntb, nwb, nsm };
+  }
+  function update() {
+    const g = collect('grades'); $('grades-tb').textContent = g.ntb; $('grades-wb').textContent = g.nwb; $('grades-total').textContent = naira(g.total); $('grades-est').textContent = naira(g.total);
+    const e = collect('exams'); $('exams-tb').textContent = e.ntb; $('exams-wb').textContent = e.nwb; $('exams-sm').textContent = e.nsm; $('exams-total').textContent = naira(e.total); $('exams-est').textContent = naira(e.total);
+  }
+
+  let current = 'choose';
+  function show() {
+    const h = (location.hash || '').replace('#', '');
+    current = h === 'grades' || h === 'exams' ? h : 'choose';
+    $('choose-view').hidden = current !== 'choose';
+    $('grades-view').hidden = current !== 'grades';
+    $('exams-view').hidden = current !== 'exams';
+    $('details-view').hidden = current === 'choose';
+    $('sent').hidden = true; $('form-err').hidden = true;
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+
+  function deliver(subject, body) {
+    const box = $('sent');
+    const href = 'mailto:' + SUPPORT + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    const text = 'To: ' + SUPPORT + '\nSubject: ' + subject + '\n\n' + body;
+    box.replaceChildren();
+    box.append(el('strong', '', 'Last step: send it from your email.'));
+    box.append(el('span', 'hint', 'Press "Open my email app" and then Send. If nothing opens, copy the message and email it to ' + SUPPORT + ', or send it on WhatsApp to +234 810 844 1317.'));
+    const pre = el('pre', '', text);
+    const r = el('div', 'row');
+    const open = el('a', 'btn', 'Open my email app'); open.href = href;
+    const copy = el('button', 'btn alt', 'Copy message'); copy.type = 'button';
+    copy.onclick = async () => {
+      try { await navigator.clipboard.writeText(text); copy.textContent = 'Copied'; }
+      catch (e) { const rg = document.createRange(); rg.selectNodeContents(pre); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg); copy.textContent = 'Selected: press copy'; }
+    };
+    const wa = el('a', 'btn alt', 'Send on WhatsApp'); wa.href = 'https://wa.me/2348108441317?text=' + encodeURIComponent(subject + '\n\n' + body); wa.target = '_blank'; wa.rel = 'noopener';
+    r.append(open, copy, wa); box.append(pre, r); box.hidden = false;
+    box.scrollIntoView({ block: 'nearest' });
+  }
+
+  $('schoolform').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const d = collect(current);
+    if (!d.lines.length) { $('form-err').textContent = 'Enter how many books at least one class needs.'; $('form-err').hidden = false; return; }
+    $('form-err').hidden = true;
+    const f = new FormData(ev.target);
+    const copies = d.lines.reduce((a, l) => a + l[2], 0);
+    const kind = current === 'exams' ? 'exam years' : 'grade levels';
+    const body = 'BOOK INTEREST PLEDGE (not a payment) - Nigerian School of Mathematics, ' + kind +
+      '\n\nSchool: ' + f.get('school') + '\nName: ' + f.get('name') + '\nRole: ' + f.get('role') + '\nPhone/WhatsApp: ' + f.get('phone') + '\nEmail: ' + (f.get('email') || '') +
+      '\nState/LGA: ' + (f.get('state') || '') + '\nWard/coordinator: ' + (f.get('ward') || '') + '\nTotal pupils: ' + (f.get('pupils') || '') +
+      '\n\nCopies:\n' + d.lines.map((l) => l[0] + ' | ' + l[1] + ' | ' + l[2]).join('\n') +
+      '\nTotal copies: ' + copies + '\nEstimated value: ' + naira(d.total) + '\n\nNotes: ' + (f.get('note') || '');
+    deliver('Book interest pledge: ' + f.get('school') + ' (' + copies + ' copies, Nigeria ' + kind + ')', body);
+  });
+
+  update(); show();
+})();
+</script>
+
+</body>
+</html>
