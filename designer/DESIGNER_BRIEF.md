@@ -2,9 +2,9 @@
 
 - **Client:** Amos Tarfa, Counting to Calculus / Learning Institute For Excellence LLC
 - **Contact for questions and approvals:** support@countingtocalculus.org
-- **Date:** 25 November 2026
+- **Date:** 26 November 2026 (updated: real book covers and Services for Schools page added)
 
-This package contains everything needed to put the Nigerian book site live and improve it. Working pages are already built; your job is to launch them, polish them, and replace the stand-in book covers with real artwork, without breaking the ordering and payment features described in section 6.
+This package contains everything needed to put the Nigerian book site live and improve it. Working pages are already built; your job is to launch them and polish them, without breaking the ordering and payment features described in section 6.
 
 ---
 
@@ -42,8 +42,11 @@ site/            the website, ready to upload
   order.html     order form: #grades (every class) and #exams (exam years)
   demo.html      request a demo or a free Maths Health Check
   books.html     full book store: Classics Library + Nigerian books, cart, card payment, questions, pledges
+  services.html  Services for Schools: three teacher-training programmes (naira + dollar prices) and a request form
   send.php       emails each form to support@countingtocalculus.org
-  site.css       shared styles for index, order and demo
+  site.css       shared styles for index, order, demo and services
+  covers/        the 14 real Nigerian book covers, one per class: ng-n1.jpg, ng-n2.jpg,
+                 ng-p1.jpg ... ng-p6.jpg, ng-jss1.jpg ... ng-jss3.jpg, ng-ss1.jpg ... ng-ss3.jpg (600 x 853 px)
 assets/
   classics_cover_vol1-4.jpg     real Classics Library covers (Volumes 1-4)
   classics_library_collage.png  all four covers together
@@ -56,7 +59,7 @@ DESIGNER_BRIEF   this document
 ## 4. Launch steps (about 15 minutes)
 
 1. **cPanel → Domains → Create A New Domain:** `nigeria.countingtocalculus.org`. Untick "Share document root". Note the folder it creates.
-2. **File Manager:** upload everything in `site/` into that folder, so `index.html` sits directly in it, not in a sub-folder.
+2. **File Manager:** upload everything in `site/` into that folder, including the `covers` folder, so `index.html` and `covers/` sit directly in it, not in a sub-folder.
 3. **SSL/TLS Status:** tick the subdomain and click **Run AutoSSL**.
 4. **Test:** work through the checklist in section 9.
 
@@ -134,15 +137,23 @@ The client's ordering, printing and reporting depend on these. Change the look a
 - **Teacher training:** termly cluster training and monthly online coaching.
 - **Free Maths Health Check:** one class, with a one-page results report.
 
+### Services for Schools (teacher training, `services.html`)
+Prices in naira with the US dollar equivalent at ₦1,350 = $1. Do not change them without approval.
+
+| Programme | Price |
+|---|---|
+| Tier 1: CTC Launch Workshop | ₦75,000 per school (≈ $56). ₦25,000 (≈ $19) credited back with a qualifying book order within 14 days |
+| Tier 2: Implementation Programme (flagship) | ₦225,000 per school (≈ $167) |
+| Tier 3: Maths Excellence Partnership | ₦450,000 per term (≈ $333). Early-adopter pilot ₦375,000 (≈ $278) for the first 10 schools |
+
+The training request form sends a subject starting `School demo request:` with "(Teacher training: Tier …)", so it uses the same email route as demo requests.
+
 ---
 
 ## 8. What we would like from you, in priority order
 
 1. **Launch** the site (section 4) and pass the test checklist (section 9).
-2. **Real book covers for the Nigerian books.** Today each class has a generated stand-in cover in brand colours: textbook royal blue, workbook orange, exam textbook gold, exam workbook white, sample set navy. These are drawn in code, as the `<svg>` elements in `books.html`, `index.html` and `order.html`.
-   - **Size:** 1200 × 1600 px (3:4 portrait). JPG or WebP, under 200 KB each.
-   - **How many:** 28 covers, a textbook and a workbook for each of the 14 classes. They can share one design with the class name changing.
-   - Swap each `<svg class="cover">` (or `bk-front` / `bk-back`) for an `<img>` with the same size and alt text, e.g. `alt="Primary 3 Mathematics Textbook cover"`.
+2. **Nigerian book covers: done.** The real front cover for each of the 14 classes is now in `site/covers/` and shows on every page (book store, order form, home page gallery). Each class has one cover, so the workbook card reuses the textbook cover with an orange "Workbook" corner label (the `.ngc-tag` element). If separate workbook covers are made later, save them as `covers/ng-<class>-wb.jpg` at the same size (600 × 853 px, under 100 KB) and point the workbook `<img>` tags to them; keep the alt text pattern, e.g. `alt="Primary 3 Mathematics, Nigerian School of Mathematics, workbook cover"`.
 3. **Covers for Classics Library Volumes 5–8** (the Grade 9–12 Source Books). They currently reuse the Volume 1–4 covers.
 4. **Visual polish:**
    - a hero image or photo of children learning for the home page
@@ -164,9 +175,9 @@ The client's ordering, printing and reporting depend on these. Change the look a
 ## 9. Test checklist before you hand over
 
 1. https://nigeria.countingtocalculus.org opens with the padlock (https).
-2. All four buttons on the home page open the right pages.
+2. All the buttons on the home page open the right pages, and every book cover image loads.
 3. **Order for specific grade levels.** Send a test order with school name "TEST – please ignore". The page says it was sent, and an email arrives at support@ with a subject starting "Book interest pledge:".
-4. **Request a demo.** Send a test request. The email arrives with "School demo request:".
+4. **Request a demo.** Send a test request. The email arrives with "School demo request:". Do the same from **Services for Schools** (`services.html`): pick a tier and send.
 5. **books.html.** Then:
    - Add a book to the cart.
    - Open **Pay**. It must reach the Stripe checkout page. Don't complete payment.

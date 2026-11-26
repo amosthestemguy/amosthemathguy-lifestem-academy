@@ -105,7 +105,9 @@ A scheduled task called **"Road to 100 – daily check-in"** runs at 9:21 a.m. M
 | `demo.html` | Request a demo or free Maths Health Check |
 | `books.html` | Full book store, the same as the Claude book store page, but its pledges and questions send directly |
 | `send.php` | Emails form submissions to support@countingtocalculus.org with PHP `mail()`. It accepts only subjects starting "Book interest pledge", "School demo request" or "Question before ordering", and has a hidden spam-trap field named `website`. |
+| `services.html` | Services for Schools: teacher-training tiers (naira + dollars) and a request form |
 | `site.css` | Shared styles |
+| `covers/` | The 14 class book covers |
 
 - **Remaining steps:** see `bluehost/README.md`. In short:
   1. In cPanel → Domains, create `nigeria.countingtocalculus.org`. Don't share the document root.
@@ -145,17 +147,7 @@ A scheduled task called **"Road to 100 – daily check-in"** runs at 9:21 a.m. M
 | Sample set (one exam year) | ₦10,000 for textbook + workbook | |
 
 - **Printing:** in Abuja, from December. Delivery is before the next term.
-- **Covers:** generated as SVG in brand colours, one per class and book:
-
-| Book | Cover colour |
-|---|---|
-| Textbook | Royal blue |
-| Workbook | Orange |
-| Exam textbook | Gold |
-| Exam workbook | White |
-| Sample set | Navy |
-
-  The generator is the `cover()` function in the build scripts (see section 8). Replace these with real cover art when it exists.
+- **Covers:** the real front cover for each of the 14 classes is in `ads/images/covers/ng/` and `bluehost/nigeria/covers/` (ng-n1.jpg … ng-ss3.jpg). Workbooks reuse their class cover with an orange "Workbook" corner label until separate workbook covers exist.
 
 ### Print rules
 - Print runs are **at least 100 copies**, counted across all books combined.
@@ -201,7 +193,7 @@ The order pages and pledge emails use these same IDs. Pledge emails list one boo
    - The owner decides whether to register it, or to use a subdomain of countingtocalculus.org instead.
    - Then update the `CNAME` file and the GitHub Pages settings.
 6. **Covers still needed:**
-   - real cover art for the Nigerian books
+   - separate workbook covers for the Nigerian books (optional)
    - real cover art for Classics Volumes 5–8
 7. **Optional: one Stripe link per Nigerian class.** Today one link per book type is shared, and buyers choose the class from a dropdown. Creating per-class links would make 28 new live links; only do it with the owner's approval.
 8. **Untranscribed videos.** Four long recordings have no transcript yet: `s007`, `s022`, `s036`, `s045`.
