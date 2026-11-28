@@ -25,6 +25,11 @@ main { padding-block: 2rem 3rem; display: grid; gap: 2rem; }
 .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.1rem; }
 .plan { background: var(--panel); border: 1px solid var(--line); border-top: 6px solid var(--orange); border-radius: 16px; padding: 1.4rem; display: flex; flex-direction: column; gap: .8rem; min-width: 0; }
 .plan.group { border-top-color: var(--gold); }
+.special { background: #F5B70A; color: #0B2470; border-radius: 16px; padding: 1.4rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem; align-items: center; }
+.special h2 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.7rem; margin: .2rem 0 .4rem; }
+.special .price small { color: #0B2470; }
+.special .pay { background: #0B2470; color: #fff; margin: 0; }
+@media (max-width: 640px) { .special { grid-template-columns: 1fr; } }
 .plan h2 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.6rem; margin: 0; }
 .tag { font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
 .price { font-size: 2.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -55,6 +60,16 @@ footer a { color: inherit; }
 </header>
 
 <main class="wrap">
+  <section class="special" aria-labelledby="special">
+    <div>
+      <div class="tag" style="color:#0B2470">Limited offer</div>
+      <h2 id="special">2026 Special: Live Class</h2>
+      <div class="price">$200 <small>a month, per subject</small></div>
+      <p class="note" style="min-height:0;color:#0B2470">Same Live Class as the $300 plan: live online class at your child's level, placement assessment, progress reports and Saturday family webinars. Billed $200 today, then monthly. Cancel anytime.</p>
+    </div>
+    <a class="pay" href="https://buy.stripe.com/3cI8wPcp6eXP2kYe6D6EU0r" target="_blank" rel="noopener">Pay $200 a month: 2026 Special</a>
+  </section>
+
   <section aria-labelledby="choose">
     <h2 class="sec" id="choose">1. How would you like to pay?</h2>
     <div class="toggle" role="group" aria-label="Billing">
