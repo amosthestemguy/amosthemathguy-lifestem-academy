@@ -1,0 +1,441 @@
+<meta name="dash-one-writer">
+<meta name="dash-form" content="dashboard">
+<style>
+.r1 { display: flex; flex-direction: column; gap: var(--cds-gap-xl); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+.r1 h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.r1 h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs); }
+.r1-lede { font-size: var(--cds-font-size-heading); margin: var(--cds-gap-sm) 0 0; max-width: 62ch; }
+.r1-sub, .r1-cap, .r1-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: var(--cds-gap-xs) 0 0; }
+.r1-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--cds-gap-md); }
+.r1-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+.r1-tile.r1-goal { grid-column: span 2; }
+@media (max-width: 520px) { .r1-tile.r1-goal { grid-column: auto; } }
+.r1-lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .06em; }
+.r1-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.4rem; line-height: 1.1; font-variant-numeric: tabular-nums; margin-top: var(--cds-gap-xs); }
+.r1-of { font-size: 1.1rem; color: var(--color-fg-muted); }
+.r1-track { height: 10px; border-radius: 999px; background: var(--cds-chart-grid); margin-top: var(--cds-gap-sm); overflow: hidden; }
+.r1-fill { display: block; height: 100%; width: 0; border-radius: 999px; }
+.r1-stages { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-lg); margin-top: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.r1-stages b { color: var(--color-fg); font-variant-numeric: tabular-nums; }
+.r1-fb { list-style: none; margin: var(--cds-gap-sm) 0 0; padding: 0; display: grid; gap: var(--cds-gap-sm); }
+.r1-fb li { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); background: var(--color-panel); }
+.r1-fb .r1-tip { font-weight: var(--cds-font-weight-medium); margin-top: 6px; }
+.r1-fb .r1-why { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin-top: 4px; }
+.r1-pill { display: inline-block; font-size: var(--cds-font-size-caption); border-radius: 999px; padding: 1px 9px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); margin-right: 6px; }
+.r1-pill.r1-now { border-color: var(--color-bad); color: var(--color-bad); }
+.r1-pill.r1-live { border-color: var(--color-ok); color: var(--color-ok); }
+.r1-chart { position: relative; min-height: 240px; margin-top: var(--cds-gap-sm); }
+.r1-chart svg { display: block; width: 100%; }
+.r1-chart .tick text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); }
+.r1-chart .domain, .r1-chart .tick line { stroke: var(--cds-chart-grid); }
+.r1-tt { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: 6px 9px; font-size: var(--cds-font-size-caption); white-space: nowrap; }
+.r1-tw { overflow-x: auto; margin-top: var(--cds-gap-sm); }
+.r1 table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); }
+.r1 th, .r1 td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.r1 th { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+.r1 td.r1-n, .r1 th.r1-n { text-align: right; font-variant-numeric: tabular-nums; }
+.r1 td.r1-wrap { white-space: normal; min-width: 180px; }
+.r1-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--cds-gap-sm); align-items: end; margin-top: var(--cds-gap-sm); padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
+.r1-form label { display: flex; flex-direction: column; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.r1-form input { font: inherit; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 7px 9px; }
+.r1-btn { font: inherit; font-weight: var(--cds-font-weight-medium); border: 0; border-radius: var(--cds-radius); padding: 9px 14px; background: var(--color-fg); color: var(--color-bg); cursor: pointer; }
+.r1-btn:focus-visible, .r1-form input:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.r1-warn { color: var(--color-bad); font-size: var(--cds-font-size-caption); }
+.r1-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: var(--cds-pad-md) 0; }
+.r1 a { color: inherit; }
+.r1-bar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: end; justify-content: space-between; margin-top: var(--cds-gap-sm); }
+.r1-bar label { display: flex; flex-direction: column; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.r1 tr.r1-day td { border-top: 2px solid var(--color-border-line); }
+.r1 td.r1-dayname { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+.r1 td.r1-prev { white-space: normal; min-width: 240px; max-width: 520px; }
+</style>
+
+<div class="r1">
+  <header id="top">
+    <h1>Road to 100 Students</h1>
+    <p class="r1-lede" data-draw="lede">—</p>
+    <p class="r1-sub">Counting to Calculus · social posts, ads and the families who reach out · numbers collected every morning at 9:30 AM Mountain</p>
+  </header>
+
+  <section class="r1-tiles" id="tiles">
+    <div class="r1-tile r1-goal" id="goal">
+      <div class="r1-lbl">Students enrolled</div>
+      <div class="r1-big"><span data-draw="enrolled" data-source="funnel" data-field="enrolled" data-row="0">—</span><span class="r1-of"> of 100 goal</span></div>
+      <div class="r1-track"><span class="r1-fill" data-draw="goalbar" data-source="funnel" data-field="enrolled" data-row="0"></span></div>
+      <div class="r1-stages">
+        <span>Leads <b data-draw="s_leads" data-source="funnel" data-field="leads" data-row="0">—</b></span>
+        <span>Readiness check done <b data-draw="s_checked" data-source="funnel" data-field="checked" data-row="0">—</b></span>
+        <span>Trial booked <b data-draw="s_booked" data-source="funnel" data-field="booked" data-row="0">—</b></span>
+        <span>Trial attended <b data-draw="s_attended" data-source="funnel" data-field="attended" data-row="0">—</b></span>
+      </div>
+    </div>
+    <div class="r1-tile" id="views-tile">
+      <div class="r1-lbl">Post views, all channels</div>
+      <div class="r1-big" data-draw="views" data-source="post_totals" data-field="views" data-row="0">—</div>
+      <p class="r1-note">Plays and views of every published post</p>
+    </div>
+    <div class="r1-tile" id="eng-tile">
+      <div class="r1-lbl">Likes, comments, shares</div>
+      <div class="r1-big" data-draw="engagement" data-source="post_totals" data-field="engagement" data-row="0">—</div>
+      <p class="r1-note">Every reply to a comment is a lead chance</p>
+    </div>
+    <div class="r1-tile" id="posts-tile">
+      <div class="r1-lbl">Posts out / scheduled</div>
+      <div class="r1-big"><span data-draw="published" data-source="post_totals" data-field="published" data-row="0">—</span><span class="r1-of"> / </span><span data-draw="scheduled" data-source="post_totals" data-field="scheduled" data-row="0">—</span></div>
+      <p class="r1-note">Across both Facebook Pages, Instagram and YouTube</p>
+    </div>
+  </section>
+
+  <section id="posted">
+    <h2>Posted recently</h2>
+    <p class="r1-cap">Everything that went out in the last 7 days, newest first, from the post list the 9:30 AM check-in refreshes each morning. Times are Mountain.</p>
+    <div class="r1-tiles">
+      <div class="r1-tile" id="posted-today"><div class="r1-lbl">Posted today</div><div class="r1-big" data-draw="p_today" data-source="posted_counts" data-field="today" data-row="0">—</div></div>
+      <div class="r1-tile" id="posted-yesterday"><div class="r1-lbl">Posted yesterday</div><div class="r1-big" data-draw="p_yesterday" data-source="posted_counts" data-field="yesterday" data-row="0">—</div></div>
+      <div class="r1-tile" id="posted-week"><div class="r1-lbl">Last 7 days</div><div class="r1-big" data-draw="p_week" data-source="posted_counts" data-field="week" data-row="0">—</div></div>
+    </div>
+    <div class="r1-bar">
+      <label for="posted-platform">Platform<select class="dash-select" id="posted-platform" aria-label="Platform">
+        <option value="">All platforms</option><option value="facebook">Facebook</option><option value="instagram">Instagram</option><option value="youtube">YouTube</option><option value="linkedin">LinkedIn</option><option value="x">X</option>
+      </select></label>
+    </div>
+    <div class="r1-tw">
+      <table data-source="posts" data-row-key="post_id">
+        <thead><tr><th data-field="published">Day and time</th><th data-field="video">What went out</th><th data-field="channel">Account</th><th data-field="platform">Platform</th><th class="r1-n" data-field="views">Views</th><th data-field="url">Link</th></tr></thead>
+        <tbody data-draw="postedtable"></tbody>
+      </table>
+    </div>
+    <p class="r1-empty" data-draw="postedempty">—</p>
+  </section>
+
+  <section id="paid">
+    <h2>Paid ads</h2>
+    <p class="r1-cap" data-draw="paidnote">—</p>
+    <div class="r1-tiles">
+      <div class="r1-tile" id="spend-tile"><div class="r1-lbl">Ad spend to date</div><div class="r1-big" data-draw="spend" data-source="unit_costs" data-field="spend" data-row="0">—</div><p class="r1-note">Meta campaign, all ads</p></div>
+      <div class="r1-tile" id="cpl-tile"><div class="r1-lbl">Cost per lead</div><div class="r1-big" data-draw="cpl" data-source="unit_costs" data-field="per_lead" data-row="0">—</div><p class="r1-note">Education benchmark about $28</p></div>
+      <div class="r1-tile" id="cpt-tile"><div class="r1-lbl">Cost per trial attended</div><div class="r1-big" data-draw="cpt" data-source="unit_costs" data-field="per_trial" data-row="0">—</div><p class="r1-note">The number to watch weekly</p></div>
+      <div class="r1-tile" id="cps-tile"><div class="r1-lbl">Cost per enrolled student</div><div class="r1-big" data-draw="cps" data-source="unit_costs" data-field="per_student" data-row="0">—</div><p class="r1-note">Keep under $400 to scale spend</p></div>
+    </div>
+  </section>
+
+  <section id="feedback">
+    <h2>What to do next</h2>
+    <p class="r1-cap">Written each morning from the latest numbers</p>
+    <ol class="r1-fb" data-draw="feedback" data-source="feedback"></ol>
+  </section>
+
+  <section id="reach">
+    <h2>Daily reach, last 30 days</h2>
+    <p class="r1-cap">Facebook Page impressions for Counting To Calculus and Learning Institute For Excellence, plus Instagram reach for @thelifellc</p>
+    <div class="r1-chart" data-draw="reachchart" data-source="channel_daily"></div>
+  </section>
+
+  <section id="posts">
+    <h2>Every post</h2>
+    <p class="r1-cap">Newest first. Times are Mountain. A dash means the platform hasn't reported that number.</p>
+    <div class="r1-tw">
+      <table data-source="posts" data-row-key="post_id">
+        <thead><tr>
+          <th data-field="published">When</th><th data-field="video">Video</th><th data-field="platform">Platform</th><th data-field="channel">Account</th><th data-field="status">Status</th>
+          <th class="r1-n" data-field="views">Views</th><th class="r1-n" data-field="likes">Likes</th><th class="r1-n" data-field="comments">Comments</th><th class="r1-n" data-field="shares">Shares</th><th data-field="url">Link</th>
+        </tr></thead>
+        <tbody data-draw="poststable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="leads">
+    <h2>Leads</h2>
+    <p class="r1-cap">Every family who comments, emails, messages or fills in the form. Move each one along as they book an assessment and enroll.</p>
+    <form class="r1-form" id="leadform">
+      <label for="lead-name">Parent or student<input id="lead-name" name="who" required autocomplete="off"></label>
+      <label for="lead-source">Came from<select class="dash-select" id="lead-source" name="source">
+        <option>Facebook comment</option><option>Instagram comment</option><option>Facebook or Instagram DM</option><option>YouTube comment</option><option>Email</option><option>Website form</option><option>Webinar</option><option>Referral</option><option>Other</option>
+      </select></label>
+      <label for="lead-program">Interested in<select class="dash-select" id="lead-program" name="program">
+        <option>Not sure yet</option><option>Live Class ($300/mo)</option><option>Small Group ($750/mo)</option><option>English</option><option>One-on-one</option>
+      </select></label>
+      <label for="lead-notes">Notes<input id="lead-notes" name="note" autocomplete="off" placeholder="Grade, subject, what they asked"></label>
+      <button class="r1-btn" type="submit" id="lead-add">Add lead</button>
+    </form>
+    <p class="r1-warn" id="unsaved" hidden>That wasn't saved. Only editors of this dashboard can add or change leads.</p>
+    <div class="r1-tw">
+      <table data-source="leads" data-row-key="id">
+        <thead><tr><th data-field="date">Added</th><th data-field="who">Family</th><th data-field="source">Came from</th><th data-field="program">Interested in</th><th data-field="stage">Stage</th><th data-field="note">Notes</th></tr></thead>
+        <tbody data-draw="leadstable"></tbody>
+      </table>
+    </div>
+    <p class="r1-empty" data-draw="leadsempty">—</p>
+  </section>
+</div>
+
+<script>
+window.R1 = {
+  GOAL: 100,
+  STAGES: ['New lead', 'Readiness check done', 'Trial booked', 'Trial attended', 'Enrolled', 'Not now'],
+  money: (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : '$' + d3.format(',.0f')(v)),
+  num: (v) => (v === null || v === undefined || v === '' ? null : Number(v)),
+  fmt: (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : d3.format(',')(v)),
+  when: (iso) => new Date(iso).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
+  async saveLead(id, row) {
+    let ok = true;
+    try {
+      const db = await claude.use('db');
+      if (id) await db.doc('data/leads/rows/' + id).set(row);
+      else await db.collection('data/leads/rows').add(row);
+    } catch (e) { ok = false; }
+    document.querySelectorAll('#unsaved').forEach((p) => { p.hidden = ok; });
+    return ok;
+  },
+};
+
+dash.calc('post_totals', {
+  inputs: ['posts'],
+  title: 'Post totals',
+  description: 'Views and engagement added up over every published post, and posts published versus still scheduled.',
+  fn: (posts) => {
+    const n = (v) => (v === null || v === undefined || v === '' ? 0 : Number(v));
+    const pub = posts.filter((p) => p.status === 'Published');
+    return [{
+      views: d3.sum(pub, (p) => n(p.views)),
+      engagement: d3.sum(pub, (p) => n(p.likes) + n(p.comments) + n(p.shares)),
+      published: pub.length,
+      scheduled: posts.filter((p) => p.status === 'Scheduled').length,
+    }];
+  },
+});
+
+dash.calc('funnel', {
+  inputs: ['leads'],
+  title: 'Lead funnel',
+  description: 'Leads you logged, and how many have reached each stage or beyond.',
+  fn: (leads) => {
+    const order = ['New lead', 'Readiness check done', 'Trial booked', 'Trial attended', 'Enrolled'];
+    const atLeast = (s) => leads.filter((l) => order.indexOf(l.stage) >= order.indexOf(s)).length;
+    return [{ leads: leads.length, checked: atLeast('Readiness check done'), booked: atLeast('Trial booked'), attended: atLeast('Trial attended'), enrolled: atLeast('Enrolled') }];
+  },
+});
+
+dash.calc('unit_costs', {
+  inputs: ['ads', 'funnel'],
+  title: 'Cost per lead, trial and student',
+  description: 'Total Meta ad spend divided by the leads, trials attended and students enrolled logged on this dashboard. Empty until there is spend and at least one of each.',
+  fn: (ads, funnel) => {
+    const spend = d3.sum(ads, (a) => Number(a.spend) || 0);
+    const f = funnel && funnel[0] ? funnel[0] : { leads: 0, attended: 0, enrolled: 0 };
+    const per = (n) => (spend > 0 && n > 0 ? spend / n : null);
+    return [{ spend, per_lead: per(f.leads), per_trial: per(f.attended), per_student: per(f.enrolled) }];
+  },
+});
+
+const one = (src, field) => {
+  const d = dash.data(src);
+  return d.status === 'ok' && d.data && d.data[0] ? d.data[0][field] : null;
+};
+['enrolled', 's_leads', 's_checked', 's_booked', 's_attended'].forEach((name) => {
+  const field = { enrolled: 'enrolled', s_leads: 'leads', s_checked: 'checked', s_booked: 'booked', s_attended: 'attended' }[name];
+  dash.draw(name, (el) => { el.textContent = R1.fmt(one('funnel', field)); });
+});
+['views', 'engagement', 'published', 'scheduled'].forEach((name) => {
+  dash.draw(name, (el) => { el.textContent = R1.fmt(one('post_totals', name)); });
+});
+[['spend', 'spend'], ['cpl', 'per_lead'], ['cpt', 'per_trial'], ['cps', 'per_student']].forEach(([name, field]) => {
+  dash.draw(name, (el) => { el.textContent = R1.money(one('unit_costs', field)); });
+});
+dash.draw('paidnote', (el) => {
+  const a = dash.data('ads');
+  if (a.status !== 'ok') { el.textContent = '—'; return; }
+  el.textContent = a.data.length === 0
+    ? 'The ads are built and paused. Numbers appear here the morning after they go live.'
+    : 'Meta ad results collected each morning. Costs divide total spend by the leads, trials and students logged below.';
+});
+
+dash.draw('goalbar', (el) => {
+  const v = one('funnel', 'enrolled') || 0;
+  el.style.width = Math.min(100, (v / R1.GOAL) * 100) + '%';
+  el.style.background = dash.colors[0];
+});
+
+dash.draw('lede', (el) => {
+  const f = dash.data('funnel'), t = dash.data('post_totals');
+  if (f.status !== 'ok' || t.status !== 'ok') { el.textContent = '—'; return; }
+  const e = f.data[0].enrolled, l = f.data[0].leads, v = t.data[0].views;
+  const left = Math.max(0, R1.GOAL - e);
+  el.textContent = `${R1.fmt(e)} of ${R1.GOAL} students enrolled and ${R1.fmt(l)} ${l === 1 ? 'lead' : 'leads'} logged. Published posts have ${R1.fmt(v)} views so far; ${R1.fmt(left)} more students to reach the goal.`;
+});
+
+dash.draw('feedback', (el) => {
+  const d = dash.data('feedback');
+  if (d.status !== 'ok') { el.replaceChildren(); return; }
+  const latest = d3.max(d.data, (r) => r.date);
+  const rows = d.data.filter((r) => r.date === latest);
+  el.replaceChildren(...rows.map((r, i) => {
+    const li = document.createElement('li');
+    li.dataset.row = String(d.data.indexOf(r));
+    const p = document.createElement('span'); p.className = 'r1-pill' + (r.priority === 'Do today' ? ' r1-now' : ''); p.textContent = r.priority;
+    const a = document.createElement('span'); a.className = 'r1-pill'; a.textContent = r.area;
+    const tip = document.createElement('div'); tip.className = 'r1-tip'; tip.textContent = r.tip;
+    const why = document.createElement('div'); why.className = 'r1-why'; why.textContent = r.why;
+    li.append(p, a, tip, why);
+    return li;
+  }));
+});
+
+dash.draw('reachchart', (el) => {
+  const d = dash.data('channel_daily');
+  if (d.status !== 'ok') { el.replaceChildren(); el.textContent = d.status === 'error' ? 'The reach numbers didn’t load.' : '—'; return; }
+  const n = (v) => (v === null || v === undefined || v === '' ? 0 : Number(v));
+  const rows = d.data.map((r) => ({ date: new Date(r.date + 'T12:00:00Z'), day: r.date, c2c: n(r.c2c_facebook), life: n(r.life_facebook), ig: n(r.instagram) }))
+    .map((r) => ({ ...r, total: r.c2c + r.life + r.ig }));
+  const W = el.clientWidth || 600, H = 240, m = { t: 10, r: 8, b: 26, l: 34 };
+  const x = d3.scaleBand(rows.map((r) => r.day), [m.l, W - m.r]).padding(0.25);
+  const y = d3.scaleLinear([0, Math.max(5, d3.max(rows, (r) => r.total))], [H - m.b, m.t]).nice();
+  const svg = d3.create('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+    .attr('aria-label', 'Bar chart of daily reach across the two Facebook Pages and Instagram for the last 30 days');
+  svg.append('g').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)))
+    .call((g) => g.select('.domain').remove()).call((g) => g.selectAll('.tick line').style('stroke', 'var(--cds-chart-grid)'));
+  const every = Math.ceil(rows.length / Math.max(2, Math.floor((W - m.l) / 70)));
+  svg.append('g').attr('transform', `translate(0,${H - m.b})`)
+    .call(d3.axisBottom(x).tickValues(rows.filter((_, i) => i % every === 0).map((r) => r.day)).tickFormat((s) => d3.utcFormat('%b %-d')(new Date(s + 'T12:00:00Z'))).tickSizeOuter(0));
+  const keys = [['c2c', 'Counting To Calculus FB'], ['life', 'Learning Institute FB'], ['ig', 'Instagram @thelifellc']];
+  const stack = d3.stack().keys(keys.map((k) => k[0]))(rows);
+  svg.append('g').selectAll('g').data(stack).join('g').style('fill', (s, i) => dash.colors[i % dash.colors.length])
+    .selectAll('rect').data((s) => s).join('rect')
+    .attr('x', (p) => x(p.data.day)).attr('width', x.bandwidth())
+    .attr('y', (p) => y(p[1])).attr('height', (p) => Math.max(0, y(p[0]) - y(p[1])));
+  const tt = document.createElement('div'); tt.className = 'r1-tt'; tt.hidden = true;
+  svg.append('g').selectAll('rect').data(rows).join('rect')
+    .attr('x', (r) => x(r.day)).attr('width', x.bandwidth()).attr('y', m.t).attr('height', H - m.b - m.t).style('fill', 'transparent')
+    .on('pointerenter pointermove', (ev, r) => {
+      tt.hidden = false;
+      tt.textContent = `${d3.utcFormat('%b %-d')(r.date)}: ${r.total} total · C2C FB ${r.c2c} · Learning Institute FB ${r.life} · IG ${r.ig}`;
+      const [px] = d3.pointer(ev, el);
+      tt.style.left = Math.min(px + 10, W - 260) + 'px'; tt.style.top = '4px';
+    })
+    .on('pointerleave', () => { tt.hidden = true; });
+  const legend = document.createElement('div'); legend.className = 'r1-stages';
+  keys.forEach((k, i) => { const s = document.createElement('span'); s.textContent = '■ ' + k[1]; s.style.color = dash.colors[i % dash.colors.length]; legend.append(s); });
+  el.replaceChildren(svg.node(), tt, legend);
+});
+
+dash.draw('poststable', (tb) => {
+  const d = dash.data('posts');
+  if (d.status !== 'ok') { tb.replaceChildren(); return; }
+  const rows = [...d.data].sort((a, b) => d3.descending(a.published, b.published));
+  tb.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.post_id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt; return td; };
+    const st = document.createElement('td'); const pill = document.createElement('span');
+    pill.className = 'r1-pill' + (r.status === 'Published' ? ' r1-live' : ''); pill.textContent = r.status; st.append(pill);
+    const link = document.createElement('td');
+    if (r.url && /^https:\/\//.test(r.url)) { const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open'; link.append(a); } else link.textContent = '—';
+    tr.append(cell(R1.when(r.published)), cell(r.video), cell(r.platform), cell(r.channel), st,
+      cell(R1.fmt(R1.num(r.views)), 'r1-n'), cell(R1.fmt(R1.num(r.likes)), 'r1-n'), cell(R1.fmt(R1.num(r.comments)), 'r1-n'), cell(R1.fmt(R1.num(r.shares)), 'r1-n'), link);
+    return tr;
+  }));
+});
+
+dash.draw('leadstable', (tb) => {
+  const d = dash.data('leads');
+  if (d.status !== 'ok') { tb.replaceChildren(); return; }
+  const rows = [...d.data].sort((a, b) => d3.descending(a.date || '', b.date || ''));
+  tb.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    const stTd = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'dash-select';
+    sel.setAttribute('aria-label', 'Stage for ' + (r.who || 'this lead'));
+    R1.STAGES.forEach((s) => sel.append(new Option(s)));
+    sel.value = R1.STAGES.includes(r.stage) ? r.stage : 'New lead';
+    sel.onchange = () => { const { id, ...rest } = r; R1.saveLead(r.id, { ...rest, stage: sel.value }); };
+    stTd.append(sel);
+    tr.append(cell(r.date ? d3.utcFormat('%b %-d')(new Date(r.date)) : ''), cell(r.who), cell(r.source), cell(r.program), stTd, cell(r.note, 'r1-wrap'));
+    return tr;
+  }));
+});
+
+dash.draw('leadsempty', (el) => {
+  const d = dash.data('leads');
+  el.hidden = d.status === 'ok' && d.data.length > 0;
+  el.textContent = d.status === 'error' ? 'The leads didn’t load.' : 'No leads yet. When a parent comments, emails or messages, add them above so they count toward the 100.';
+});
+
+document.querySelectorAll('#leadform').forEach((form) => {
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const f = new FormData(form);
+    const who = String(f.get('who') || '').trim();
+    if (!who) return;
+    const ok = await R1.saveLead(null, { date: new Date().toISOString(), who, source: f.get('source'), program: f.get('program'), stage: 'New lead', note: String(f.get('note') || '').trim() });
+    if (ok) form.querySelectorAll('#lead-name, #lead-notes').forEach((i) => { i.value = ''; });
+  });
+});
+</script>
+
+<script>
+window.R1P = {
+  day: (iso) => new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/Denver' }),
+  recent: (rows) => {
+    const cut = Date.now() - 7 * 864e5;
+    return rows.filter((p) => p.status === 'Published' && p.published && new Date(p.published).getTime() >= cut);
+  },
+};
+
+dash.calc('posted_counts', {
+  inputs: ['posts'],
+  title: 'Posts out today, yesterday and this week',
+  description: 'Counts published posts by their Mountain-time date: today, yesterday, and the last 7 days.',
+  fn: (posts) => {
+    const day = (iso) => new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/Denver' });
+    const today = day(Date.now()), yesterday = day(Date.now() - 864e5);
+    const cut = Date.now() - 7 * 864e5;
+    const pub = posts.filter((p) => p.status === 'Published' && p.published);
+    return [{
+      today: pub.filter((p) => day(p.published) === today).length,
+      yesterday: pub.filter((p) => day(p.published) === yesterday).length,
+      week: pub.filter((p) => new Date(p.published).getTime() >= cut).length,
+    }];
+  },
+});
+
+['p_today', 'p_yesterday', 'p_week'].forEach((name) => {
+  const f = { p_today: 'today', p_yesterday: 'yesterday', p_week: 'week' }[name];
+  dash.draw(name, (el) => {
+    const c = dash.data('posted_counts');
+    el.textContent = c.status === 'ok' && c.data && c.data[0] ? R1.fmt(c.data[0][f]) : '—';
+  });
+});
+
+document.querySelectorAll('#posted-platform').forEach((sel) => {
+  sel.value = dash.params().platform || '';
+  sel.addEventListener('change', () => dash.setParams({ platform: sel.value || null }));
+});
+
+dash.draw('postedtable', (tb) => {
+  const d = dash.data('posts');
+  if (d.status !== 'ok') { tb.replaceChildren(); return; }
+  const plat = dash.params().platform || '';
+  const rows = R1P.recent(d.data).filter((r) => !plat || String(r.platform).toLowerCase() === plat)
+    .sort((a, b) => d3.descending(a.published, b.published));
+  let last = null;
+  tb.replaceChildren(...rows.map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.post_id);
+    const cell = (txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt ?? ''; return td; };
+    const dk = R1P.day(r.published); const first = dk !== last; last = dk;
+    if (first) tr.className = 'r1-day';
+    const when = new Date(r.published).toLocaleString('en-US', { timeZone: 'America/Denver', weekday: first ? 'short' : undefined, month: first ? 'short' : undefined, day: first ? 'numeric' : undefined, hour: 'numeric', minute: '2-digit' });
+    const link = document.createElement('td');
+    if (r.url && /^https:\/\//.test(r.url)) { const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open'; link.append(a); } else link.textContent = '—';
+    tr.append(cell(when, first ? 'r1-dayname' : ''), cell(r.video, 'r1-prev'), cell(r.channel), cell(r.platform), cell(R1.fmt(R1.num(r.views)), 'r1-n'), link);
+    return tr;
+  }));
+});
+
+dash.draw('postedempty', (el) => {
+  const d = dash.data('posts');
+  const plat = dash.params().platform || '';
+  const n = d.status === 'ok' ? R1P.recent(d.data).filter((r) => !plat || String(r.platform).toLowerCase() === plat).length : 0;
+  el.hidden = d.status === 'loading' || (d.status === 'ok' && n > 0);
+  el.textContent = d.status === 'error' ? 'The post list didn’t load.' : 'Nothing published on this platform in the last 7 days.';
+});
+</script>

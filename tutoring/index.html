@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pay Tuition · Counting to Calculus</title>
+<meta name="description" content="Pay Counting to Calculus tuition securely by card: Live Class or Small Group, monthly or prepaid for the year.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root { --bg: #F7F4EC; --panel: #FFFFFF; --ink: #0B2470; --ink-2: #44507A; --line: #E2DCCB; --gold: #F5B70A; --orange: #E8762B; --navy: #0B2470; --btn: #0B2470; --btn-ink: #FFFFFF; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462; --navy: #0A1238; --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #0E1430; --panel: #161E44; --ink: #EEF1FA; --ink-2: #B4BDDA; --line: #2A3462; --navy: #0A1238; --btn: #F5B70A; --btn-ink: #0B2470; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; line-height: 1.5; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+header { background: var(--navy); color: #fff; padding-block: 2.4rem 2.2rem; }
+.kick { color: var(--gold); font-weight: 800; letter-spacing: .2em; font-size: .78rem; text-transform: uppercase; }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.05; margin: .5rem 0 .7rem; text-wrap: balance; }
+.lede { margin: 0; max-width: 60ch; opacity: .92; font-size: 1.05rem; }
+main { padding-block: 2rem 3rem; display: grid; gap: 2rem; }
+.toggle { display: inline-flex; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; }
+.toggle button { font: inherit; font-weight: 700; border: 0; border-radius: 999px; padding: .55rem 1.1rem; background: transparent; color: var(--ink); cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: var(--btn); color: var(--btn-ink); }
+.save { display: block; color: var(--orange); font-weight: 700; font-size: .9rem; margin-top: .5rem; }
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.1rem; }
+.plan { background: var(--panel); border: 1px solid var(--line); border-top: 6px solid var(--orange); border-radius: 16px; padding: 1.4rem; display: flex; flex-direction: column; gap: .8rem; min-width: 0; }
+.plan.group { border-top-color: var(--gold); }
+.special { background: #F5B70A; color: #0B2470; border-radius: 16px; padding: 1.4rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem; align-items: center; }
+.special h2 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.7rem; margin: .2rem 0 .4rem; }
+.special .price small { color: #0B2470; }
+.special .pay { background: #0B2470; color: #fff; margin: 0; }
+@media (max-width: 640px) { .special { grid-template-columns: 1fr; } }
+.plan h2 { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.6rem; margin: 0; }
+.tag { font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.price { font-size: 2.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.price small { font-size: 1rem; font-weight: 600; color: var(--ink-2); }
+.note { margin: 0; color: var(--ink-2); font-size: .92rem; min-height: 2.8em; }
+ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+.pay { margin-top: auto; display: block; text-align: center; text-decoration: none; font-weight: 800; font-size: 1.05rem; background: var(--btn); color: var(--btn-ink); border-radius: 12px; padding: 1rem; min-height: 44px; }
+.pay:focus-visible, .toggle button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.secure { text-align: center; font-size: .85rem; color: var(--ink-2); margin: 0; }
+.info { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: 12px; padding: 1.1rem 1.3rem; }
+.info h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+.info p { margin: .3rem 0; color: var(--ink-2); }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .8rem; list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1rem 1rem 3.2rem; position: relative; }
+.steps li::before { counter-increment: s; content: counter(s); position: absolute; left: 1rem; top: 1rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--gold); color: #0B2470; font-weight: 800; display: grid; place-items: center; font-size: .85rem; }
+h2.sec { font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 1.5rem; margin: 0 0 .7rem; }
+footer { background: var(--gold); color: #0B2470; text-align: center; font-weight: 800; padding: 1.1rem 16px; font-size: .9rem; }
+footer a { color: inherit; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kick">Counting to Calculus · Tuition</div>
+    <h1>Pay tuition</h1>
+    <p class="lede">Choose your program and how you'd like to pay. Checkout is secure through Stripe and takes about a minute. Summer is included, and there's no long-term contract.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="special" aria-labelledby="special">
+    <div>
+      <div class="tag" style="color:#0B2470">Limited offer</div>
+      <h2 id="special">2026 Special: Live Class</h2>
+      <div class="price">$200 <small>a month, per subject</small></div>
+      <p class="note" style="min-height:0;color:#0B2470">Same Live Class as the $300 plan: live online class at your child's level, placement assessment, progress reports and Saturday family webinars. Billed $200 today, then monthly. Cancel anytime.</p>
+    </div>
+    <a class="pay" href="https://buy.stripe.com/3cI8wPcp6eXP2kYe6D6EU0r" target="_blank" rel="noopener">Pay $200 a month: 2026 Special</a>
+  </section>
+
+  <section aria-labelledby="choose">
+    <h2 class="sec" id="choose">1. How would you like to pay?</h2>
+    <div class="toggle" role="group" aria-label="Billing">
+      <button type="button" data-bill="month" aria-pressed="true">Monthly</button>
+      <button type="button" data-bill="year" aria-pressed="false">Prepaid year</button>
+    </div><span class="save" id="save">Prepay the year and save</span>
+  </section>
+
+  <section aria-labelledby="plans">
+    <h2 class="sec" id="plans">2. Choose your program</h2>
+    <div class="plans">
+      <article class="plan">
+        <div class="tag">One subject</div>
+        <h2>Live Class</h2>
+        <div class="price" data-month="$300" data-year="$3,300"><span class="amt">$300</span> <small class="per">a month, per subject</small></div>
+        <p class="note" data-month="Billed monthly. Cancel anytime." data-year="Billed once for 12 months: one month free. Renews yearly; cancel anytime before renewal.">Billed monthly. Cancel anytime.</p>
+        <ul>
+          <li>Live online class at your child's level</li>
+          <li>Placement assessment and progress reports</li>
+          <li>Saturday family webinars</li>
+        </ul>
+        <a class="pay" data-month="https://buy.stripe.com/dRmaEX4WE16ZcZC0fN6EU0n" data-year="https://buy.stripe.com/00wbJ160I2b32kY5A76EU0p" href="https://buy.stripe.com/dRmaEX4WE16ZcZC0fN6EU0n" target="_blank" rel="noopener">Pay for Live Class</a>
+      </article>
+      <article class="plan group">
+        <div class="tag">Mathematics + a science · 4–6 students</div>
+        <h2>Small Group</h2>
+        <div class="price" data-month="$750" data-year="$8,750"><span class="amt">$750</span> <small class="per">a month</small></div>
+        <p class="note" data-month="Billed monthly. Cancel anytime." data-year="Billed once for 12 months. Renews yearly; cancel anytime before renewal.">Billed monthly. Cancel anytime.</p>
+        <ul>
+          <li>Same tutor every week, two subjects live</li>
+          <li>Personal learning plan and termly family meeting</li>
+          <li>Monthly mentor check-in and Top-University Plan</li>
+        </ul>
+        <a class="pay" data-month="https://buy.stripe.com/3cI3cv88Q6rj0cQgeL6EU0o" data-year="https://buy.stripe.com/4gMcN5exe4jb1gU1jR6EU0q" href="https://buy.stripe.com/3cI3cv88Q6rj0cQgeL6EU0o" target="_blank" rel="noopener">Pay for Small Group</a>
+      </article>
+    </div>
+    <p class="secure" style="margin-top:1rem">🔒 Secure card payment by Stripe. At checkout you'll enter the student's name, grade and subject.</p>
+  </section>
+
+  <section aria-labelledby="next">
+    <h2 class="sec" id="next">What happens next</h2>
+    <ol class="steps">
+      <li><b>You pay</b><br>Stripe emails your receipt right away.</li>
+      <li><b>We email you</b><br>Within one business day, to book the free placement assessment.</li>
+      <li><b>Your child starts</b><br>In the right class, at the right level.</li>
+    </ol>
+  </section>
+
+  <section class="info">
+    <h3>Good to know</h3>
+    <p>More than one child or subject? Multi-child and multi-subject scholarships are available. Ask us for a family plan before paying.</p>
+    <p>One-on-one tutoring is available from $125 per session. Contact us to book.</p>
+    <p>Questions: <a href="mailto:Amos@countingtocalculus.org">Amos@countingtocalculus.org</a> · 612-616-9899 (call or WhatsApp)</p>
+  </section>
+</main>
+<footer>Where Classical Education Meets STEM Excellence · <a href="https://tinyurl.com/CountingToCalculus" target="_blank" rel="noopener">Apply or book a placement assessment</a></footer>
+<script>
+(() => {
+  const btns = document.querySelectorAll('.toggle button');
+  const per = { month: ['a month, per subject', 'a month'], year: ['for the year, per subject', 'for the year'] };
+  function set(bill) {
+    btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.bill === bill)));
+    document.querySelectorAll('.plan').forEach((plan, i) => {
+      const p = plan.querySelector('.price'); p.querySelector('.amt').textContent = p.dataset[bill]; p.querySelector('.per').textContent = per[bill][i];
+      const n = plan.querySelector('.note'); n.textContent = n.dataset[bill];
+      const a = plan.querySelector('.pay'); a.href = a.dataset[bill];
+    });
+    document.getElementById('save').textContent = bill === 'year' ? 'Live Class: one month free' : 'Prepay the year and save';
+    try { localStorage.setItem('ctc-bill', bill); } catch (e) {}
+  }
+  btns.forEach((b) => b.addEventListener('click', () => set(b.dataset.bill)));
+  let start = 'month'; try { start = localStorage.getItem('ctc-bill') || 'month'; } catch (e) {}
+  if (location.hash === '#year') start = 'year';
+  set(start === 'year' ? 'year' : 'month');
+})();
+</script>
+</body>
+</html>

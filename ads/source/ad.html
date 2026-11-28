@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CTC Ad Renderer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Caveat:wght@600;700&display=block" rel="stylesheet">
+<style>
+:root{
+  --blue:#1f4fd6; --blue2:#163fb4; --navy:#0b2470; --gold:#f5b70a; --gold2:#ffd257; --white:#fff;
+  --serif:'Playfair Display', Georgia, serif; --sans:'Inter', 'Liberation Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--blue)}
+body{font-family:var(--sans);color:var(--white);-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 0%, #2a5ff0 0%, var(--blue) 45%, var(--blue2) 75%, var(--navy) 100%)}
+#bg{position:absolute;inset:0;pointer-events:none}
+.sym{position:absolute;font-family:var(--serif);font-style:italic;color:rgba(255,255,255,.07);white-space:nowrap}
+.brand{position:absolute;left:0;right:0;text-align:center;font-weight:700;letter-spacing:.32em;
+  color:var(--gold);font-size:13px;z-index:5}
+.brand .rule{display:block;width:44px;height:2px;background:var(--gold);margin:10px auto 0}
+.scene{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:0 34px;opacity:0}
+.kicker{font-size:14px;font-weight:700;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+h1{font-family:var(--serif);font-weight:800;font-size:46px;line-height:1.08;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--gold)}
+h2{font-family:var(--serif);font-weight:800;font-size:34px;line-height:1.12}
+h2 em{font-style:normal;color:var(--gold)}
+.sub{font-size:19px;line-height:1.4;color:rgba(255,255,255,.9);font-weight:500}
+.gap{height:18px}.gap2{height:30px}
+.dayrow{width:100%;max-width:440px}
+.day{font-family:var(--serif);font-weight:800;font-size:26px;margin-bottom:12px}
+.chips{display:flex;gap:10px;justify-content:center}
+.chip{flex:1;background:#fff;color:var(--navy);border-radius:14px;padding:14px 0;font-weight:800;font-size:22px;
+  box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.chip small{font-size:13px;font-weight:700;margin-left:2px}
+.chip.g{background:var(--gold);color:var(--navy)}
+.et{font-size:15px;color:rgba(255,255,255,.85);font-weight:600}
+.cards{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px}
+.card{background:#fff;color:var(--navy);border-radius:20px;padding:20px 22px;text-align:left;position:relative;
+  box-shadow:0 10px 0 rgba(0,0,0,.18)}
+.card.g{background:var(--gold)}
+.card .nm{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;opacity:.75}
+.card .pr{font-family:var(--serif);font-weight:900;font-size:50px;line-height:1.05}
+.card .pr span{font-family:var(--sans);font-size:17px;font-weight:700;margin-left:4px}
+.card .ds{font-size:16px;font-weight:600;line-height:1.35}
+.list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px;text-align:left}
+.li{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);
+  border-radius:16px;padding:14px 16px;font-size:19px;font-weight:600;line-height:1.25}
+.li b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;
+  align-items:center;justify-content:center;font-weight:900;font-size:17px}
+.cta{background:var(--gold);color:var(--navy);font-weight:800;font-size:23px;border-radius:999px;padding:18px 30px;
+  box-shadow:0 8px 0 #b98700}
+.url{font-size:21px;font-weight:800;letter-spacing:.01em}
+.url2{font-size:16px;font-weight:600;color:rgba(255,255,255,.85)}
+.photo{width:210px;height:210px;border-radius:50%}
+.name{font-family:var(--serif);font-weight:800;font-size:32px}
+.tag{font-size:14px;font-weight:800;letter-spacing:.24em;color:var(--gold)}
+.pill{display:inline-block;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 16px;font-size:16px;font-weight:600;margin:4px}
+.strike{position:relative;display:inline-block}
+.compact{font-size:18px;font-weight:600;line-height:1.55}
+.compact b{color:var(--gold)}
+/* feed (4:5) is shorter: tighten */
+.feed h1{font-size:42px}.feed h2{font-size:31px}
+.feed .card{padding:14px 20px}.feed .card .pr{font-size:42px}
+.feed .li{padding:10px 14px;font-size:18px}.feed .gap2{height:20px}
+.feed .photo{width:170px;height:170px}
+.feed .cards{gap:12px}.feed .list{gap:9px}
+/* story (9:16): larger type for phones */
+.story .scene{zoom:1.12;padding:0 18px}
+.story .scene.nz{zoom:1}
+
+/* ---------- live-class (video call) scene ---------- */
+.room{width:100%;max-width:470px;display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:8px}
+.tile{flex:1;aspect-ratio:16/10;border-radius:10px;overflow:hidden;position:relative;background:#1b2033;
+  border:2px solid rgba(255,255,255,.12)}
+.tile svg{width:100%;height:100%;display:block}
+.nm2{position:absolute;left:6px;bottom:5px;font-size:11px;font-weight:600;background:rgba(0,0,0,.55);
+  padding:2px 7px;border-radius:5px;color:#fff;text-align:left}
+.hand{position:absolute;right:6px;top:5px;font-size:20px;opacity:0}
+.board{position:relative;width:100%;aspect-ratio:2/1;background:#fdfcf7;border-radius:12px;overflow:hidden;
+  border:3px solid var(--gold);color:#16224f;text-align:left}
+.bhead{position:absolute;left:0;right:0;top:0;height:22px;background:#0e1a3f;color:#fff;font-size:11px;font-weight:600;
+  display:flex;align-items:center;gap:6px;padding:0 9px}
+.bhead i{width:7px;height:7px;border-radius:50%;background:#ff4d4d;display:inline-block}
+.board svg.tri{position:absolute;left:2%;top:14%;width:33%;height:84%}
+.hw{position:absolute;font-family:'Caveat',cursive;font-weight:700;white-space:nowrap;line-height:1;padding:0 10px 0 0}
+.pip{position:absolute;right:8px;bottom:10px;width:24%;aspect-ratio:1}
+.pip img{width:100%;height:100%;border-radius:50%}
+.pip .lbl{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);font-size:10px;font-weight:700;
+  background:var(--navy);color:#fff;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.bars{position:absolute;left:4px;top:4px;display:flex;gap:2px;align-items:flex-end;height:14px;background:var(--gold);
+  padding:2px 4px;border-radius:6px}
+.bars span{width:3px;background:var(--navy);border-radius:2px}
+.illus{font-size:11px;color:rgba(255,255,255,.6);font-weight:500}
+.feed .room{max-width:440px}
+.ctaphoto{width:96px;height:96px;border-radius:50%}
+.by{font-size:14px;font-weight:600;color:rgba(255,255,255,.88)}
+.feed .ctaphoto{width:74px;height:74px}
+#bar{position:absolute;left:0;height:4px;background:var(--gold);z-index:6}
+</style>
+</head>
+<body>
+<div id="stage"><div id="bg"></div><div class="brand" id="brand">COUNTING TO CALCULUS<span class="rule"></span></div><div id="bar"></div></div>
+<script>
+const P = new URLSearchParams(location.search);
+const AD = P.get('ad') || 'times';
+const FMT = P.get('fmt') || 'story';
+document.body.classList.add(FMT);
+
+// Safe zones: Reels/Stories UI covers ~14% top and ~30% bottom.
+const SAFE = FMT === 'story' ? {top: 150, bottom: 300} : {top: 70, bottom: 36};
+document.getElementById('brand').style.top = (FMT === 'story' ? 112 : 30) + 'px';
+document.getElementById('bar').style.top = (FMT === 'story' ? 0 : 0) + 'px';
+
+
+// Illustrated students (not real children): skin, hair, shirt, background, hair style
+const avatar = (skin, hair, shirt, bg, style) => `
+ <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
+  <rect width="160" height="100" fill="${bg}"/>
+  <rect x="0" y="0" width="160" height="38" fill="rgba(255,255,255,.08)"/>
+  <path d="M38 100 Q40 70 80 68 Q120 70 122 100Z" fill="${shirt}"/>
+  <rect x="72" y="56" width="16" height="14" rx="5" fill="${skin}"/>
+  ${style === 'long' ? `<path d="M55 45 Q55 14 80 14 Q105 14 105 45 L106 76 Q96 70 92 52 L68 52 Q64 70 54 76Z" fill="${hair}"/>` : ''}
+  <ellipse cx="80" cy="42" rx="19" ry="22" fill="${skin}"/>
+  ${style === 'puff' ? `<circle cx="80" cy="22" r="17" fill="${hair}"/><circle cx="63" cy="30" r="9" fill="${hair}"/><circle cx="97" cy="30" r="9" fill="${hair}"/>` : ''}
+  ${style === 'short' ? `<path d="M61 38 Q60 18 80 18 Q100 18 99 38 Q92 28 80 28 Q68 28 61 38Z" fill="${hair}"/>` : ''}
+  ${style === 'long' ? `<path d="M61 40 Q62 18 80 18 Q98 18 99 40 Q88 26 61 40Z" fill="${hair}"/>` : ''}
+  ${style === 'cap' ? `<path d="M60 34 Q61 16 80 16 Q99 16 100 34Z" fill="${hair}"/><rect x="58" y="31" width="44" height="5" rx="2" fill="${hair}"/>` : ''}
+  <circle cx="73" cy="43" r="2.2" fill="#1a1a1a"/><circle cx="87" cy="43" r="2.2" fill="#1a1a1a"/>
+  <path d="M73 52 Q80 57 87 52" stroke="#5a2d1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+ </svg>`;
+const STUDENTS = [
+  ['Maya',   avatar('#8d5524', '#1b0f0a', '#e8574a', '#3a4a7a', 'puff')],
+  ['Jordan', avatar('#f1c27d', '#6b3e1e', '#2f9e6e', '#4a3f6b', 'short')],
+  ['Priya',  avatar('#c68642', '#121212', '#f2a541', '#2f5d6b', 'long')],
+  ['Leo',    avatar('#e0ac69', '#2b1a10', '#5a7bd8', '#5b3a4a', 'cap')],
+  ['Zara',   avatar('#5c3a21', '#0d0806', '#9b59b6', '#2e4f3e', 'long')],
+  ['Ethan',  avatar('#ffdbac', '#c9892b', '#e67e22', '#3b3b5e', 'short')],
+];
+const stile = ([n, svg], k, hand) => `<div class="tile a pop" data-k="${k}">${svg}<div class="nm2">${n}</div>${hand ? `<div class="hand" data-s="${hand}">✋</div>` : ''}</div>`;
+const CLASSROOM = (titleHtml) => `
+ ${titleHtml}<div class="gap"></div>
+ <div class="room">
+  <div class="row">${stile(STUDENTS[0], 1.6)}${stile(STUDENTS[1], 2)}${stile(STUDENTS[2], 2.4)}</div>
+  <div class="board a pop" data-k="1">
+   <div class="bhead"><i></i>LIVE · Amos Tarfa is presenting</div>
+   <svg class="tri" viewBox="0 0 200 180">
+    <path class="draw" d="M40 145 L175 145 L40 35 Z" pathLength="1" fill="none" stroke="#1f4fd6" stroke-width="5" stroke-linejoin="round" data-s="0.7" data-d="0.8"/>
+    <path class="draw" d="M40 127 L58 127 L58 145" pathLength="1" fill="none" stroke="#1f4fd6" stroke-width="3" data-s="1.4" data-d="0.25"/>
+    <text class="fi" data-s="1.5" x="14" y="98" font-family="Caveat" font-weight="700" font-size="34" fill="#c0392b">a</text>
+    <text class="fi" data-s="1.65" x="100" y="176" font-family="Caveat" font-weight="700" font-size="34" fill="#c0392b">b</text>
+    <text class="fi" data-s="1.8" x="115" y="82" font-family="Caveat" font-weight="700" font-size="34" fill="#c0392b">c</text>
+   </svg>
+   <div class="hw w" style="left:37%;top:17%;font-size:34px;color:#1f4fd6" data-s="1.9" data-d="0.7">a² + b² = c²</div>
+   <div class="hw w" style="left:37%;top:40%;font-size:27px" data-s="2.6" data-d="0.55">3² + 4² = 5²</div>
+   <div class="hw w" style="left:37%;top:60%;font-size:27px;color:#1d8a4e" data-s="3.15" data-d="0.55">9 + 16 = 25 ✓</div>
+   <div class="hw w" style="left:37%;top:81%;font-size:16px;color:#7a6a3a" data-s="3.6" data-d="0.4">known in Babylon, 1800 BC</div>
+   <div class="pip"><img class="kb" src="amos.png"><div class="bars"><span></span><span></span><span></span></div><div class="lbl">Amos Tarfa</div></div>
+  </div>
+  <div class="row">${stile(STUDENTS[3], 2.8)}${stile(STUDENTS[4], 3.2, 2.6)}${stile(STUDENTS[5], 3.6)}</div>
+ </div>
+ <div class="gap"></div><div class="illus a" data-k="5">Live online class · students shown as illustrations</div>`;
+const LIVE_TITLE = `<div class="kicker a" data-k="0">Real teaching · live on screen</div>`;
+
+const TIMES = `
+ <div class="dayrow a"><div class="day">Monday – Thursday</div>
+  <div class="chips"><div class="chip">5<small>PM</small></div><div class="chip">6<small>PM</small></div><div class="chip">7<small>PM</small></div><div class="chip">8<small>PM</small></div></div></div>
+ <div class="gap2"></div>
+ <div class="dayrow a"><div class="day">Saturday</div>
+  <div class="chips"><div class="chip g">12<small>PM</small></div><div class="chip g">1<small>PM</small></div><div class="chip g">2<small>PM</small></div><div class="chip g">3<small>PM</small></div></div></div>
+ <div class="gap"></div>
+ <div class="et a">All times Eastern · live online, from anywhere</div>`;
+
+const TIMES_COMPACT = `<div class="compact a">Mon–Thu: <b>5, 6, 7 or 8 PM</b> ET<br>Saturday: <b>12, 1, 2 or 3 PM</b> ET</div>`;
+
+const CTA = (btn, extra) => `
+ <img class="ctaphoto a pop" src="amos.png"><div class="gap"></div>
+ <div class="by a">Classes designed by <b>Amos Tarfa</b> (AmosTheMathGuy)</div><div class="gap2"></div>
+ <div class="kicker a">Step 1 is free</div><div class="gap"></div>
+ <h2 class="a">Start with a <em>free placement assessment</em></h2><div class="gap2"></div>
+ <div class="cta a pop">${btn} →</div><div class="gap2"></div>
+ <div class="url a">tinyurl.com/CountingToCalculus</div><div class="gap"></div>
+ <div class="url2 a">Call / WhatsApp 612-616-9899</div>
+ ${extra ? `<div class="gap"></div><div class="url2 a">${extra}</div>` : ''}`;
+
+const PRICES = `
+ <div class="cards">
+  <div class="card a pop"><div class="nm">Live Class</div><div class="pr">$300<span>/ month</span></div>
+   <div class="ds">Math <u>or</u> English · per subject</div></div>
+  <div class="card g a pop"><div class="nm">Small Group · 4–6 students</div><div class="pr">$750<span>/ month</span></div>
+   <div class="ds">Math <u>and</u> Science · same tutor every week</div></div>
+ </div>`;
+
+const ADS = {
+ // 1 — schedule-led, both offers
+ times: { music: 'bright', scenes: [
+  [0, 3.0, `<div class="kicker a">Live · online · certified tutors</div><div class="gap"></div>
+            <h1 class="a">Math & English classes that <em>fit your family's week</em></h1>`],
+  [3.0, 7.6, CLASSROOM(LIVE_TITLE), 'nz'],
+  [7.6, 11.6, `<div class="kicker a">Pick your time</div><div class="gap2"></div>${TIMES}`],
+  [11.6, 14.6, `<div class="kicker a">Two ways to join</div><div class="gap2"></div>${PRICES}`],
+  [14.6, 18.5, CTA('Book your free assessment', 'Month to month · Summer included')],
+ ]},
+ // 2 — problem → solution, Live Class $300
+ gaps: { music: 'warm', scenes: [
+  [0, 3.0, `<h1 class="a">Schools have to keep moving.</h1><div class="gap"></div><h1 class="a"><em>Gaps get left behind.</em></h1>`],
+  [3.0, 6.6, `<div class="kicker a">Here's the fix</div><div class="gap2"></div>
+     <div class="list"><div class="li a"><b>1</b>Free placement assessment finds the gaps</div>
+     <div class="li a"><b>2</b>Live classes close them, with mastery before speed</div>
+     <div class="li a"><b>3</b>Your child moves forward, all the way to calculus</div></div>`],
+  [6.6, 11.2, CLASSROOM(`<div class="kicker a" data-k="0">Every idea, with the story behind it</div>`), 'nz'],
+  [11.2, 14.6, `<div class="kicker a">Live Class</div><div class="gap"></div>
+     <div class="cards"><div class="card a pop"><div class="pr">$300<span>/ month</span></div><div class="ds">per subject · Math or English</div></div></div>
+     <div class="gap2"></div>${TIMES_COMPACT}`],
+  [14.6, 18.5, CTA('Book a free assessment', 'No contract · Summer included')],
+ ]},
+ // 3 — Small Group $750 (opens on the live class)
+ group: { music: 'bright', scenes: [
+  [0, 4.6, CLASSROOM(`<h2 class="a" data-k="0">4–6 students. <em>One tutor who knows your child.</em></h2>`), 'nz'],
+  [4.6, 8.4, `<div class="kicker a">Small Group includes</div><div class="gap2"></div>
+     <div class="list"><div class="li a"><b>✓</b>Math and Science, both live every week</div>
+     <div class="li a"><b>✓</b>A personal learning plan, updated every term</div>
+     <div class="li a"><b>✓</b>A 1-on-1 mentor check-in every month</div>
+     <div class="li a"><b>✓</b>Help between sessions</div></div>`],
+  [8.4, 14.6, `<div class="kicker a">Small Group</div><div class="gap"></div>
+     <div class="cards"><div class="card g a pop"><div class="pr">$750<span>/ month</span></div><div class="ds">Math + Science together</div></div></div>
+     <div class="gap2"></div>${TIMES_COMPACT}`],
+  [14.6, 18.5, CTA('Reserve a seat', 'Seats in each group are limited')],
+ ]},
+ // 4 — founder-led
+ amos: { music: 'warm', scenes: [
+  [0, 3.0, `<h1 class="a">Top of the class?</h1><div class="gap"></div><h1 class="a"><em>That's where we start.</em></h1>`],
+  [3.0, 6.8, `<img class="photo a pop kb" src="amos.png"><div class="gap"></div>
+     <div class="name a">Amos Tarfa</div><div class="tag a">AMOSTHEMATHGUY</div><div class="gap"></div>
+     <div class="a"><span class="pill">Founder, Counting to Calculus</span><span class="pill">Instructor, MIT Gateway to AI Initiative</span><span class="pill">20 years teaching math & science</span></div>`],
+  [6.8, 11.4, CLASSROOM(LIVE_TITLE), 'nz'],
+  [11.4, 14.6, `<div class="kicker a">Live classes, after school & Saturdays</div><div class="gap2"></div>${PRICES}`],
+  [14.6, 18.5, CTA('Book a free assessment', 'Mon–Thu 5–8 PM ET · Sat 12–3 PM ET')],
+ ]},
+};
+const ad = ADS[AD];
+const TOTAL = ad.scenes[ad.scenes.length - 1][1];
+window.TOTAL = TOTAL; window.MUSIC = ad.music;
+
+const stage = document.getElementById('stage');
+const H = stage.clientHeight;
+const scenes = ad.scenes.map(([s, e, html, cls]) => {
+  const el = document.createElement('div');
+  el.className = 'scene' + (cls ? ' ' + cls : ''); el.innerHTML = html;
+  el.style.top = SAFE.top + 'px'; el.style.bottom = (cls === 'nz' && FMT === 'story' ? 250 : SAFE.bottom) + 'px';
+  stage.appendChild(el);
+  const items = [...el.querySelectorAll('.a')];
+  return {s, e, el, items};
+});
+
+// floating math symbols (history-of-math motif)
+const SYMS = ['∫ f(x) dx','π','a² + b² = c²','Σ','dy/dx','e^{iπ} + 1 = 0','√2','∞','f′(x)','sin θ','x = −b ± √(b²−4ac) / 2a','Δ','φ','lim','H₂O','F = ma'];
+const bg = document.getElementById('bg');
+const syms = SYMS.map((txt, i) => {
+  const d = document.createElement('div'); d.className = 'sym'; d.textContent = txt;
+  const r = (k) => { const x = Math.sin(i * 91.7 + k * 13.3) * 43758.5453; return x - Math.floor(x); };
+  const o = {d, x: r(1) * 100, y: r(2) * 100, sp: 6 + r(3) * 10, size: 18 + r(4) * 34, rot: (r(5) - .5) * 24};
+  d.style.fontSize = o.size + 'px'; bg.appendChild(d); return o;
+});
+
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+const backOut = (x) => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+window.render = (t) => {
+  const W = stage.clientWidth;
+  syms.forEach(o => {
+    const y = ((o.y - t * o.sp * 0.6) % 110 + 110) % 110 - 5;
+    o.d.style.transform = `translate(${o.x / 100 * W - 40}px, ${y / 100 * H}px) rotate(${o.rot}deg)`;
+  });
+  document.getElementById('bar').style.width = (t / TOTAL * 100) + '%';
+  scenes.forEach((sc, idx) => {
+    const last = idx === scenes.length - 1;
+    const local = t - sc.s;
+    const inV = clamp(local / 0.25);
+    const outV = last ? 1 : clamp((sc.e - t) / 0.3);
+    const vis = t >= sc.s - 0.001 && (last || t < sc.e);
+    sc.el.style.opacity = vis ? Math.min(inV, outV) : 0;
+    sc.el.style.transform = `scale(${1 + (1 - outV) * 0.04})`;
+    sc.items.forEach((it, k0) => {
+      const k = it.dataset.k !== undefined ? +it.dataset.k : k0;
+      const p = clamp((local - 0.08 - k * 0.16) / 0.5);
+      if (it.classList.contains('pop')) {
+        it.style.opacity = clamp(p * 2.5);
+        it.style.transform = `scale(${0.6 + 0.4 * backOut(p)})`;
+      } else {
+        it.style.opacity = easeOut(p);
+        it.style.transform = `translateY(${(1 - easeOut(p)) * 26}px)`;
+      }
+    });
+    sc.el.querySelectorAll('.w').forEach(w => {
+      const p = clamp((local - +w.dataset.s) / +w.dataset.d);
+      w.style.clipPath = p >= 1 ? 'none' : `inset(-100% ${(1 - p) * 100}% -100% 0)`;
+    });
+    sc.el.querySelectorAll('.draw').forEach(d => {
+      const p = clamp((local - +d.dataset.s) / +d.dataset.d);
+      d.style.strokeDasharray = '1'; d.style.strokeDashoffset = String(1 - easeOut(p));
+    });
+    sc.el.querySelectorAll('.fi').forEach(f => { f.style.opacity = clamp((local - +f.dataset.s) / 0.2); });
+    sc.el.querySelectorAll('.hand').forEach(h => {
+      const p = clamp((local - +h.dataset.s) / 0.35);
+      h.style.opacity = p; h.style.transform = `scale(${0.4 + 0.6 * backOut(p)}) rotate(${Math.sin(local * 9) * 10 * p}deg)`;
+      const tile = h.parentElement; tile.style.borderColor = p > 0 ? 'rgba(245,183,10,.9)' : '';
+    });
+    sc.el.querySelectorAll('.bars span').forEach((b, i) => {
+      b.style.height = (4 + 9 * Math.abs(Math.sin(local * (7 + i * 2.3) + i))) + 'px';
+    });
+    sc.el.querySelectorAll('.kb').forEach(img => { img.style.transform = `scale(${1 + 0.035 * Math.max(0, local)})`; });
+    // gentle pulse on the CTA button in the last scene
+    if (last) sc.el.querySelectorAll('.cta').forEach(b => {
+      const q = Math.max(0, local - 1.2);
+      b.style.transform = `scale(${1 + 0.035 * Math.sin(q * 5.5) * (q > 0 ? 1 : 0)})`;
+    });
+  });
+};
+window.render(0);
+window.READY = document.fonts.ready.then(() => Promise.all([...document.images].map(i => i.complete ? 1 : new Promise(r => i.onload = r))));
+</script>
+</body>
+</html>
